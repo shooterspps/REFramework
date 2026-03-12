@@ -137,7 +137,7 @@ VRRuntime::Error OpenXR::update_render_target_size() {
     uint32_t view_count{};
     auto result = xrEnumerateViewConfigurationViews(this->instance, this->system, this->view_config, 0, &view_count, nullptr); 
     if (result != XR_SUCCESS) {
-        this->error = "Could not get view configuration properties: " + this->get_result_string(result);
+        this->error = "无法获取视图配置属性: " + this->get_result_string(result);
         spdlog::error("[VR] {}", this->error.value());
 
         return (VRRuntime::Error)result;
@@ -146,7 +146,7 @@ VRRuntime::Error OpenXR::update_render_target_size() {
     this->view_configs.resize(view_count, {XR_TYPE_VIEW_CONFIGURATION_VIEW});
     result = xrEnumerateViewConfigurationViews(this->instance, this->system, this->view_config, view_count, &view_count, this->view_configs.data());
     if (result != XR_SUCCESS) {
-        this->error = "Could not get view configuration properties: " + this->get_result_string(result);
+        this->error = "无法获取视图配置属性: " + this->get_result_string(result);
         spdlog::error("[VR] {}", this->error.value());
 
         return (VRRuntime::Error)result;
@@ -981,9 +981,9 @@ void OpenXR::trigger_haptic_vibration(float duration, float frequency, float amp
 
 void OpenXR::display_bindings_editor() {
     const auto current_interaction_profile = this->get_current_interaction_profile();
-    ImGui::Text("Interaction Profile: %s", current_interaction_profile.c_str());
+    ImGui::Text("交互简介: %s", current_interaction_profile.c_str());
 
-    if (ImGui::Button("Restore Default Bindings")) {
+    if (ImGui::Button("还原默认绑定")) {
         auto filename = current_interaction_profile + ".json";
         
         // replace the slashes with underscores
@@ -996,13 +996,13 @@ void OpenXR::display_bindings_editor() {
         }
     }
 
-    if (ImGui::Button("Save Bindings")) {
+    if (ImGui::Button("保存绑定")) {
         this->save_bindings();
     }
 
     auto display_hand = [&](const std::string& name, uint32_t index) {
         if (current_interaction_profile.empty() || current_interaction_profile == "XR_NULL_PATH") {
-            ImGui::Text("Interaction profile not loaded, try putting on your headset.");
+            ImGui::Text("交互配置文件未加载, 请尝试戴上耳机.");
             return;
         }
 
@@ -1087,10 +1087,10 @@ void OpenXR::display_bindings_editor() {
 
             // Create a way to add a completely new binding
             // Create a textbox for inputting the path for the new binding
-            ImGui::InputText("New Binding (e.g. /user/hand/left/input/trigger)", hand.ui.new_path_name, XR_MAX_PATH_LENGTH);
-            ImGui::Combo("Action", &hand.ui.action_combo_index, known_actions_cstr.data(), known_actions_cstr.size());
+            ImGui::InputText("新绑定 (例如. /user/hand/left/input/trigger)", hand.ui.new_path_name, XR_MAX_PATH_LENGTH);
+            ImGui::Combo("激活", &hand.ui.action_combo_index, known_actions_cstr.data(), known_actions_cstr.size());
 
-            if (ImGui::Button("Add Binding")) {
+            if (ImGui::Button("添加绑定")) {
                 XrPath p{};
                 if (xrStringToPath(this->instance, hand.ui.new_path_name, &p) != XR_SUCCESS) {
                     spdlog::error("[VR] Failed to convert path: {}", hand.ui.new_path_name);
@@ -1100,7 +1100,7 @@ void OpenXR::display_bindings_editor() {
                 }
             }
 
-            ImGui::Text("Vector2 Associations");
+            ImGui::Text("Vector2 关联");
             for (auto& it : hand.profiles[current_interaction_profile].vector_activators) {
                 ImGui::PushID(&it.first);
 
@@ -1164,11 +1164,11 @@ void OpenXR::display_bindings_editor() {
                         output.action = this->action_set.action_map[known_actions[output_combo_index]];
                     }
 
-                    ImGui::SliderFloat2("Value", &output.value[0], -1.0f, 1.0f);
+                    ImGui::SliderFloat2("值", &output.value[0], -1.0f, 1.0f);
                     ImGui::PopID();
                 }
 
-                if (ImGui::Button("Insert New Output")) {
+                if (ImGui::Button("插入新内容")) {
                     hand.profiles[current_interaction_profile].vector_activators[activator].push_back({});
                 }
 
@@ -1180,12 +1180,12 @@ void OpenXR::display_bindings_editor() {
                 ImGui::PopID();
             }
 
-            ImGui::Combo("New Vector2 Activator", &hand.ui.activator_combo_index, known_actions_cstr.data(), known_actions_cstr.size());
-            ImGui::Combo("New Vector2 Modifier", &hand.ui.modifier_combo_index, known_vector2_actions_cstr.data(), known_vector2_actions_cstr.size());
-            ImGui::Combo("New Vector2 Output", &hand.ui.output_combo_index, known_actions_cstr.data(), known_actions_cstr.size());
-            ImGui::SliderFloat2("New Vector2 Value", &hand.ui.output_vector2[0], -1.0f, 1.0f);
+            ImGui::Combo("新 Vector2 激活", &hand.ui.activator_combo_index, known_actions_cstr.data(), known_actions_cstr.size());
+            ImGui::Combo("新 Vector2 修改", &hand.ui.modifier_combo_index, known_vector2_actions_cstr.data(), known_vector2_actions_cstr.size());
+            ImGui::Combo("新 Vector2 输出", &hand.ui.output_combo_index, known_actions_cstr.data(), known_actions_cstr.size());
+            ImGui::SliderFloat2("新 Vector2 值", &hand.ui.output_vector2[0], -1.0f, 1.0f);
 
-            if (ImGui::Button("Add Vector2 Association")) {
+            if (ImGui::Button("添加 Vector2 关联")) {
                 const auto activator = this->action_set.action_map[known_actions[hand.ui.activator_combo_index]];
                 const auto modifier = this->action_set.action_map[known_vector2_actions[hand.ui.modifier_combo_index]];
                 const auto output = this->action_set.action_map[known_actions[hand.ui.output_combo_index]];

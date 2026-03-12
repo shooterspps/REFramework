@@ -126,7 +126,7 @@ public:
 public:
     ObjectExplorer();
 
-    std::string_view get_name() const override { return "ObjectExplorer"; };
+    std::string_view get_name() const override { return "物件资源管理"; };
 
     void on_draw_dev_ui() override;
     void on_frame() override;

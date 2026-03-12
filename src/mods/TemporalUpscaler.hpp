@@ -22,7 +22,7 @@ class TemporalUpscaler : public Mod {
 public:
     static std::shared_ptr<TemporalUpscaler>& get();
 
-    std::string_view get_name() const { return "TemporalUpscaler"; }
+    std::string_view get_name() const { return "超分辨率技术"; }
 
     std::optional<std::string> on_initialize() override;
 
@@ -210,10 +210,10 @@ private:
     const ModCombo::Ptr m_upscale_quality{ 
         ModCombo::create(generate_name("UpscaleQuality"),
         {
-            "Performance",
-            "Balanced",
-            "Quality",
-            "Ultra Performance"
+            "性能",
+            "平衡",
+            "质量",
+            "超高性能"
         }, (int32_t)PDPerfQualityLevel::Balanced) 
     };
 

@@ -109,37 +109,37 @@ void TemporalUpscaler::on_draw_ui() {
     }
 
 #if TDB_VER < 67
-    ImGui::TextWrapped("TemporalUpscaler is not yet supported on this version of the engine.");
+    ImGui::TextWrapped("此版本的引擎尚未支持超分辨率技术.");
     ImGui::TextWrapped("Supported: RE2/RE3/RE7 (RT latest, not beta builds), RE4, RE8, SF6, DMC5 (partial)");
     return;
 #else
     if (!m_backend_loaded) {
-        ImGui::TextWrapped("Backend is not loaded, TemporalUpscaler will not work.");
-        ImGui::TextWrapped("Make sure you've downloaded UpscalerBasePlugin (PDPerfPlugin.dll)");
-        ImGui::TextWrapped("And the corresponding DLLs for your preferred upscaler(s) (DLSS/FSR2/XeSS)");
+        ImGui::TextWrapped("后台未加载, 超分辨率技术无法工作.");
+        ImGui::TextWrapped("确保已下载 UpscalerBasePlugin (PDPerfPlugin.dll)");
+        ImGui::TextWrapped("以及首选超分辨率对应的 DLL 文件 (DLSS/FSR2/XeSS)");
         return;
     }
 
     //ImGui::Checkbox("Enabled", &m_enabled);
-    m_enabled->draw("Enabled");
+    m_enabled->draw("启用");
 
     if (!ready()) {
         return;
     }
     
     //if (ImGui::Checkbox("Use Native Res (DLAA)", &m_use_native_resolution)) {
-    if (m_use_native_resolution->draw("Use Native Res (DLAA)")) {
+    if (m_use_native_resolution->draw("使用原生抗锯齿 (DLAA)")) {
         update_motion_scale();
     }
 
     //if (ImGui::Checkbox("Sharpness", &m_sharpness)) {
-    if (m_sharpness->draw("Sharpness")) {
+    if (m_sharpness->draw("清晰度")) {
         release_upscale_features();
         init_upscale_features();
     }
 
     //ImGui::DragFloat("Sharpness Amount", &m_sharpness_amount, 0.01f, 0.0f, 5.0f);
-    m_sharpness_amount->draw("Sharpness Amount");
+    m_sharpness_amount->draw("清晰度调节");
 
     const auto w = (float)get_render_width();
     const auto h = (float)get_render_height();
@@ -150,7 +150,7 @@ void TemporalUpscaler::on_draw_ui() {
         imgui_combo_names.push_back(m.c_str());
     }
     
-    if (ImGui::Combo("Upscale Type", (int*)&m_available_upscale_type, imgui_combo_names.data(), imgui_combo_names.size())) {
+    if (ImGui::Combo("超分辨率类型", (int*)&m_available_upscale_type, imgui_combo_names.data(), imgui_combo_names.size())) {
         if (m_available_upscale_type < 0 || m_available_upscale_type > m_available_upscale_method_names.size()) {
             m_available_upscale_type = 0;
             m_upscale_type = (PDUpscaleType)m_available_upscale_methods[m_available_upscale_method_names[0]];
@@ -169,7 +169,7 @@ void TemporalUpscaler::on_draw_ui() {
         init_upscale_features();
     }*/
 
-    if (m_upscale_quality->draw("Quality Level")) {
+    if (m_upscale_quality->draw("质量级别")) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         release_upscale_features();
         init_upscale_features();
@@ -177,17 +177,17 @@ void TemporalUpscaler::on_draw_ui() {
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 
-    if (ImGui::TreeNode("Debug Options")) {
-        ImGui::Checkbox("Upscale", &m_upscale);
-        ImGui::Checkbox("Jitter", &m_jitter);
-        ImGui::Checkbox("Allow Engine TAA", &m_allow_taa);
+    if (ImGui::TreeNode("调试选项")) {
+        ImGui::Checkbox("超分辨率", &m_upscale);
+        ImGui::Checkbox("抖动", &m_jitter);
+        ImGui::Checkbox("允许引擎 TAA", &m_allow_taa);
 
-        ImGui::SliderInt("Displayed Scene", &m_displayed_scene, 0, 1);
-        ImGui::DragFloat("Jitter Scale X", &m_jitter_scale[0], 0.01f, -5.0f, 5.0f);
-        ImGui::DragFloat("Jitter Scale Y", &m_jitter_scale[1], 0.01f, -5.0f, 5.0f);
+        ImGui::SliderInt("显示场景", &m_displayed_scene, 0, 1);
+        ImGui::DragFloat("抖动比例 X", &m_jitter_scale[0], 0.01f, -5.0f, 5.0f);
+        ImGui::DragFloat("抖动比例 Y", &m_jitter_scale[1], 0.01f, -5.0f, 5.0f);
 
-        if (ImGui::DragFloat("MotionScale X", &m_motion_scale[0], 0.01f, -w, w) ||
-            ImGui::DragFloat("MotionScale Y", &m_motion_scale[1], 0.01f, -h, h)) 
+        if (ImGui::DragFloat("运动比例 X", &m_motion_scale[0], 0.01f, -w, w) ||
+            ImGui::DragFloat("运动比例 Y", &m_motion_scale[1], 0.01f, -h, h)) 
         {
             SetMotionScaleX(get_evaluate_id(0), (float)m_motion_scale[0]);
             SetMotionScaleY(get_evaluate_id(0), (float)m_motion_scale[1]);
@@ -198,7 +198,7 @@ void TemporalUpscaler::on_draw_ui() {
             }
         }
 
-        ImGui::Text("OptimalBias: %f", GetOptimalMipmapBias(get_evaluate_id(0)));
+        ImGui::Text("最佳偏差: %f", GetOptimalMipmapBias(get_evaluate_id(0)));
 
         ImGui::TreePop();
     }

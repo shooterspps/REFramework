@@ -131,7 +131,7 @@ void GameObjectsDisplay::on_draw_dev_ui() {
         return;
     }
 
-    if (m_enabled->draw("Enabled")) {
+    if (m_enabled->draw("启用")) {
         if (m_enabled->value()) {
             m_needs_d3d_init = true;
         }
@@ -139,11 +139,11 @@ void GameObjectsDisplay::on_draw_dev_ui() {
 
     ImGui::SameLine();
 
-    ImGui::Checkbox("Legacy Mode", &m_legacy_mode);
+    ImGui::Checkbox("传统模式", &m_legacy_mode);
 
-    m_max_distance->draw("Max Distance for GameObjects");
+    m_max_distance->draw("游戏对象的最大距离");
 
-    if (ImGui::SliderFloat("Object Effect Alpha", &m_effect_alpha, 0.0f, 1.0f)) {
+    if (ImGui::SliderFloat("对象 Alpha 效果", &m_effect_alpha, 0.0f, 1.0f)) {
         m_effect_dirty = true;
     }
 }

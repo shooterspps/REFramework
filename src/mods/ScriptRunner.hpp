@@ -322,7 +322,7 @@ class ScriptRunner : public Mod {
 public:
     static std::shared_ptr<ScriptRunner>& get();
 
-    std::string_view get_name() const override { return "ScriptRunner"; }
+    std::string_view get_name() const override { return "运行脚本##main"; }
     std::optional<std::string> on_initialize() override;
     void on_config_load(const utility::Config& cfg) override;
     void on_config_save(utility::Config& cfg) override;
@@ -436,24 +436,24 @@ private:
     const ModCombo::Ptr m_gc_handler { 
         ModCombo::create(generate_name("GarbageCollectionHandlerV2"),
         {
-            "Managed by REFramework",
-            "Managed by Lua"
+            "由RE引擎框架管理",
+            "由 Lua 管理"
         }, (int)ScriptState::GarbageCollectionHandler::REFRAMEWORK_MANAGED)
     };
 
     const ModCombo::Ptr m_gc_type {
         ModCombo::create(generate_name("GarbageCollectionTypeV2"),
         {
-            "Step",
-            "Full",
+            "分段",
+            "完整",
         }, (int)ScriptState::GarbageCollectionType::STEP)
     };
 
     const ModCombo::Ptr m_gc_mode {
         ModCombo::create(generate_name("GarbageCollectionMode"),
         {
-            "Generational",
-            "Incremental (Mark & Sweep)",
+            "继承",
+            "递增 (标记和扫描)",
         }, (int)ScriptState::GarbageCollectionMode::GENERATIONAL)
     };
 

@@ -9,7 +9,7 @@ class FreeCam : public Mod {
 public:
     FreeCam() = default;
 
-    std::string_view get_name() const override { return "FreeCam"; }
+    std::string_view get_name() const override { return "自由摄像机"; }
 
     void on_config_load(const utility::Config& cfg) override;
     void on_config_save(utility::Config& cfg) override;

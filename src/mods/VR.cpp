@@ -902,11 +902,11 @@ and place the openxr_loader.dll in the same folder.)";
 } catch(...) {
     spdlog::error("Exception occurred in VR::on_initialize()");
 
-    m_runtime->error = "Exception occurred in VR::on_initialize()";
+    m_runtime->error = "VR 出现异常::on_initialize()";
     m_openxr->dll_missing = false;
     m_openvr->dll_missing = false;
-    m_openxr->error = "Exception occurred in VR::on_initialize()";
-    m_openvr->error = "Exception occurred in VR::on_initialize()";
+    m_openxr->error = "VR 出现异常::on_initialize()";
+    m_openvr->error = "VR 出现异常::on_initialize()";
     m_openvr->loaded = false;
     m_openvr->is_hmd_active = false;
     m_openxr->loaded = false;
@@ -985,7 +985,7 @@ std::optional<std::string> VR::initialize_openvr() {
         spdlog::info("[VR] Could not load openvr_api.dll");
 
         m_openvr->dll_missing = true;
-        m_openvr->error = "Could not load openvr_api.dll";
+        m_openvr->error = "无法加载 openvr_api.dll";
         return Mod::on_initialize();
     }
 
@@ -1005,12 +1005,12 @@ std::optional<std::string> VR::initialize_openvr() {
 
     // check if error
     if (error != vr::VRInitError_None) {
-        m_openvr->error = "VR_Init failed: " + std::string{vr::VR_GetVRInitErrorAsEnglishDescription(error)};
+        m_openvr->error = "VR_Init 失败: " + std::string{vr::VR_GetVRInitErrorAsEnglishDescription(error)};
         return Mod::on_initialize();
     }
 
     if (m_openvr->hmd == nullptr) {
-        m_openvr->error = "VR_Init failed: HMD is null";
+        m_openvr->error = "VR_Init 失败: HMD 为空";
         return Mod::on_initialize();
     }
 
@@ -1018,7 +1018,7 @@ std::optional<std::string> VR::initialize_openvr() {
     m_openvr->update_render_target_size();
 
     if (vr::VRCompositor() == nullptr) {
-        m_openvr->error = "VRCompositor failed to initialize.";
+        m_openvr->error = "VRCompositor 初始化失败.";
         return Mod::on_initialize();
     }
 
@@ -1102,7 +1102,7 @@ std::optional<std::string> VR::initialize_openxr() {
         spdlog::info("[VR] Could not load openxr_loader.dll");
 
         m_openxr->loaded = false;
-        m_openxr->error = "Could not load openxr_loader.dll";
+        m_openxr->error = "无法加载 openxr_loader.dll";
 
         return std::nullopt;
     }
@@ -1144,7 +1144,7 @@ std::optional<std::string> VR::initialize_openxr() {
         // we can't convert the result to a string here
         // because the function requires the instance to be valid
         if (result != XR_SUCCESS) {
-            m_openxr->error = "Could not create openxr instance: " + std::to_string((int32_t)result);
+            m_openxr->error = "无法创建 openxr 实例: " + std::to_string((int32_t)result);
             spdlog::error("[VR] {}", m_openxr->error.value());
 
             return std::nullopt;
@@ -1164,7 +1164,7 @@ std::optional<std::string> VR::initialize_openxr() {
         result = xrGetSystem(m_openxr->instance, &system_info, &m_openxr->system);
 
         if (result != XR_SUCCESS) {
-            m_openxr->error = "Could not create openxr system: " + m_openxr->get_result_string(result);
+            m_openxr->error = "无法创建 openxr 系统: " + m_openxr->get_result_string(result);
             spdlog::error("[VR] {}", m_openxr->error.value());
 
             return std::nullopt;
@@ -1189,7 +1189,7 @@ std::optional<std::string> VR::initialize_openxr() {
     result = xrCreateSession(m_openxr->instance, &session_create_info, &m_openxr->session);
 
     if (result != XR_SUCCESS) {
-        m_openxr->error = "Could not create openxr session: " + m_openxr->get_result_string(result);
+        m_openxr->error = "无法创建 openxr 会话: " + m_openxr->get_result_string(result);
         spdlog::error("[VR] {}", m_openxr->error.value());
 
         return std::nullopt;
@@ -1209,7 +1209,7 @@ std::optional<std::string> VR::initialize_openxr() {
         result = xrCreateReferenceSpace(m_openxr->session, &space_create_info, &m_openxr->stage_space);
 
         if (result != XR_SUCCESS) {
-            m_openxr->error = "Could not create openxr stage space: " + m_openxr->get_result_string(result);
+            m_openxr->error = "无法创建 openxr 状态空间: " + m_openxr->get_result_string(result);
             spdlog::error("[VR] {}", m_openxr->error.value());
 
             return std::nullopt;
@@ -1225,7 +1225,7 @@ std::optional<std::string> VR::initialize_openxr() {
         result = xrCreateReferenceSpace(m_openxr->session, &space_create_info, &m_openxr->view_space);
 
         if (result != XR_SUCCESS) {
-            m_openxr->error = "Could not create openxr view space: " + m_openxr->get_result_string(result);
+            m_openxr->error = "无法创建 openxr 视图空间: " + m_openxr->get_result_string(result);
             spdlog::error("[VR] {}", m_openxr->error.value());
 
             return std::nullopt;
@@ -1239,7 +1239,7 @@ std::optional<std::string> VR::initialize_openxr() {
     result = xrGetSystemProperties(m_openxr->instance, m_openxr->system, &system_properties);
 
     if (result != XR_SUCCESS) {
-        m_openxr->error = "Could not get system properties: " + m_openxr->get_result_string(result);
+        m_openxr->error = "无法获取系统属性: " + m_openxr->get_result_string(result);
         spdlog::error("[VR] {}", m_openxr->error.value());
 
         return std::nullopt;
@@ -1263,7 +1263,7 @@ std::optional<std::string> VR::initialize_openxr() {
     }
 
     if (m_openxr->view_configs.empty()) {
-        m_openxr->error = "No view configurations found";
+        m_openxr->error = "未找到视图配置";
         spdlog::error("[VR] {}", m_openxr->error.value());
 
         return std::nullopt;
@@ -4170,12 +4170,12 @@ void VR::on_draw_ui() {
         }
 
         if (runtime->error && runtime->dll_missing) {
-            ImGui::TextWrapped("%s not loaded: %s not found", runtime->name().data(), dll_name.data());
-            ImGui::TextWrapped("Please drop the %s file into the game's directory if you want to use %s", dll_name.data(), runtime->name().data());
+            ImGui::TextWrapped("%s 未加载: %s 未找到", runtime->name().data(), dll_name.data());
+            ImGui::TextWrapped("如果使用 %s 文件, 请将 %s 文件放入游戏目录", dll_name.data(), runtime->name().data());
         } else if (runtime->error) {
-            ImGui::TextWrapped("%s not loaded: %s", runtime->name().data(), runtime->error->c_str());
+            ImGui::TextWrapped("%s 未加载: %s", runtime->name().data(), runtime->error->c_str());
         } else {
-            ImGui::TextWrapped("%s not loaded: Unknown error", runtime->name().data());
+            ImGui::TextWrapped("%s 未加载: 未知错误", runtime->name().data());
         }
 
         ImGui::Separator();
@@ -4185,53 +4185,53 @@ void VR::on_draw_ui() {
     display_error(m_openvr, "openvr_api.dll");
 
     if (!get_runtime()->loaded) {
-        ImGui::TextWrapped("No runtime loaded.");
+        ImGui::TextWrapped("未加载运行.");
         return;
     }
 
-    ImGui::TextWrapped("Hardware scheduling: %s", m_has_hw_scheduling ? "Enabled" : "Disabled");
+    ImGui::TextWrapped("硬件调度: %s", m_has_hw_scheduling ? "启用" : "禁用");
 
     if (m_has_hw_scheduling) {
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-        ImGui::TextWrapped("WARNING: Hardware-accelerated GPU scheduling is enabled. This will cause the game to run slower.");
-        ImGui::TextWrapped("Go into your Windows Graphics settings and disable \"Hardware-accelerated GPU scheduling\"");
+        ImGui::TextWrapped("警告: 已启用硬件加速 GPU 调度. 这将导致游戏运行速度变慢.");
+        ImGui::TextWrapped("进入 Windows 图形设置并禁用  \"硬件加速 GPU 调度\"");
         ImGui::PopStyleColor();
     }
 
     ImGui::Separator();
 
-    ImGui::TextWrapped("VR Runtime: %s", get_runtime()->name().data());
-    ImGui::TextWrapped("Render Resolution: %d x %d", get_runtime()->get_width(), get_runtime()->get_height());
+    ImGui::TextWrapped("VR 运行时间: %s", get_runtime()->name().data());
+    ImGui::TextWrapped("渲染分辨率: %d x %d", get_runtime()->get_width(), get_runtime()->get_height());
 
     if (get_runtime()->is_openvr()) {
-        ImGui::TextWrapped("Resolution can be changed in SteamVR");
+        ImGui::TextWrapped("可在 SteamVR 中更改分辨率");
     } else if (get_runtime()->is_openxr()) {
-        if (ImGui::TreeNode("Bindings")) {
+        if (ImGui::TreeNode("绑定")) {
             m_openxr->display_bindings_editor();
             ImGui::TreePop();
         }
 
-        if (m_resolution_scale->draw("Resolution Scale")) {
+        if (m_resolution_scale->draw("缩放分辨率")) {
             m_openxr->resolution_scale = m_resolution_scale->value();
         }
     }
     
-    ImGui::Combo("Sync Mode", (int*)&get_runtime()->custom_stage, "Early\0Late\0Very Late\0");
+    ImGui::Combo("同步模式", (int*)&get_runtime()->custom_stage, "高\0低\0非常低\0");
     ImGui::Separator();
 
-    if (ImGui::Button("Set Standing Height")) {
+    if (ImGui::Button("设置站立高度")) {
         m_standing_origin.y = get_position(0).y;
     }
 
-    if (ImGui::Button("Set Standing Origin") || m_set_standing_key->is_key_down_once()) {
+    if (ImGui::Button("设置站立原点") || m_set_standing_key->is_key_down_once()) {
         m_standing_origin = get_position(0);
     }
 
-    if (ImGui::Button("Recenter View") || m_recenter_view_key->is_key_down_once()) {
+    if (ImGui::Button("重新定位视图") || m_recenter_view_key->is_key_down_once()) {
         recenter_view();
     }
 
-    if (ImGui::Button("Reinitialize Runtime")) {
+    if (ImGui::Button("重新初始化运行时间")) {
         get_runtime()->wants_reinitialize = true;
     }
 
@@ -4240,75 +4240,75 @@ void VR::on_draw_ui() {
 
     ImGui::Separator();
 
-    m_set_standing_key->draw("Set Standing Origin Key");
-    m_recenter_view_key->draw("Recenter View Key");
+    m_set_standing_key->draw("设置原始站立按键");
+    m_recenter_view_key->draw("重新定位视图按键");
 
     ImGui::Separator();
 
     m_rendering_technique->draw("Rendering Technique");
-    m_decoupled_pitch->draw("Decoupled Camera Pitch");
+    m_decoupled_pitch->draw("分离摄像机间距");
 
-    if (ImGui::Checkbox("Positional Tracking", &m_positional_tracking)) {
+    if (ImGui::Checkbox("跟踪位置", &m_positional_tracking)) {
     }
 
-    m_hmd_oriented_audio->draw("Head Oriented Audio");
-    m_use_custom_view_distance->draw("Use Custom View Distance");
-    m_view_distance->draw("View Distance/FarZ");
-    m_motion_controls_inactivity_timer->draw("Inactivity Timer");
-    m_joystick_deadzone->draw("Joystick Deadzone");
+    m_hmd_oriented_audio->draw("头部定向音频");
+    m_use_custom_view_distance->draw("使用自定义视图距离");
+    m_view_distance->draw("视图距离/FarZ");
+    m_motion_controls_inactivity_timer->draw("非活动计时器");
+    m_joystick_deadzone->draw("摇杆死区");
 
-    m_ui_scale_option->draw("2D UI Scale");
-    m_ui_distance_option->draw("2D UI Distance");
-    m_world_ui_scale_option->draw("World-Space UI Scale");
+    m_ui_scale_option->draw("2D UI 缩放");
+    m_ui_distance_option->draw("2D UI 距离");
+    m_world_ui_scale_option->draw("世界空间 UI 缩放");
 
-    ImGui::DragFloat3("Overlay Rotation", (float*)&m_overlay_rotation, 0.01f, -360.0f, 360.0f);
-    ImGui::DragFloat3("Overlay Position", (float*)&m_overlay_position, 0.01f, -100.0f, 100.0f);
+    ImGui::DragFloat3("叠加旋转", (float*)&m_overlay_rotation, 0.01f, -360.0f, 360.0f);
+    ImGui::DragFloat3("叠加位置", (float*)&m_overlay_position, 0.01f, -100.0f, 100.0f);
 
     ImGui::Separator();
-    ImGui::Text("Graphical Options");
+    ImGui::Text("图形选项");
 
-    m_force_fps_settings->draw("Force Uncap FPS");
-    m_force_aa_settings->draw("Force Disable TAA");
-    m_force_motionblur_settings->draw("Force Disable Motion Blur");
-    m_force_vsync_settings->draw("Force Disable V-Sync");
-    m_force_lensdistortion_settings->draw("Force Disable Lens Distortion");
-    m_force_volumetrics_settings->draw("Force Disable Volumetrics");
-    m_force_lensflares_settings->draw("Force Disable Lens Flares");
-    m_force_dynamic_shadows_settings->draw("Force Enable Dynamic Shadows");
-    m_allow_engine_overlays->draw("Allow Engine Overlays");
-    m_enable_asynchronous_rendering->draw("Enable Asynchronous Rendering");
+    m_force_fps_settings->draw("强制取消FPS 上限");
+    m_force_aa_settings->draw("强制禁用 TAA");
+    m_force_motionblur_settings->draw("强制禁用运动模糊");
+    m_force_vsync_settings->draw("强制禁用垂直同步");
+    m_force_lensdistortion_settings->draw("强制禁用镜头畸变");
+    m_force_volumetrics_settings->draw("强制禁用体积光效");
+    m_force_lensflares_settings->draw("强制禁用镜头炫光");
+    m_force_dynamic_shadows_settings->draw("强制启用动态阴影");
+    m_allow_engine_overlays->draw("允许叠加引擎");
+    m_enable_asynchronous_rendering->draw("启用异步渲染");
 
-    if (ImGui::TreeNode("Desktop Recording Fix")) {
-        ImGui::PushID("Desktop");
-        m_desktop_fix->draw("Enabled");
-        m_desktop_fix_skip_present->draw("Skip Present");
+    if (ImGui::TreeNode("桌面录制修复")) {
+        ImGui::PushID("桌面");
+        m_desktop_fix->draw("启用");
+        m_desktop_fix_skip_present->draw("跳过当前");
         ImGui::PopID();
         ImGui::TreePop();
     }
 
     ImGui::Separator();
-    ImGui::Text("Debug info");
+    ImGui::Text("调试信息");
     m_camera_duplicator.on_draw_ui();
     
 
-    ImGui::Checkbox("Disable Projection Matrix Override", &m_disable_projection_matrix_override);
-    ImGui::Checkbox("Disable GUI Projection Matrix Override", &m_disable_gui_camera_projection_matrix_override);
-    ImGui::Checkbox("Disable View Matrix Override", &m_disable_view_matrix_override);
-    ImGui::Checkbox("Disable Backbuffer Size Override", &m_disable_backbuffer_size_override);
-    ImGui::Checkbox("Disable Temporal Fix", &m_disable_temporal_fix);
-    ImGui::Checkbox("Disable Post Effect Fix", &m_disable_post_effect_fix);
+    ImGui::Checkbox("禁用投影矩阵覆盖", &m_disable_projection_matrix_override);
+    ImGui::Checkbox("禁用 GUI 投影矩阵覆盖", &m_disable_gui_camera_projection_matrix_override);
+    ImGui::Checkbox("禁用视图矩阵覆盖", &m_disable_view_matrix_override);
+    ImGui::Checkbox("禁用反向缓存大小覆盖", &m_disable_backbuffer_size_override);
+    ImGui::Checkbox("用时间修复", &m_disable_temporal_fix);
+    ImGui::Checkbox("禁用后期效果修复", &m_disable_post_effect_fix);
     
     const double min_ = 0.0;
     const double max_ = 25.0;
-    ImGui::SliderScalar("Prediction Scale", ImGuiDataType_Double, &m_openxr->prediction_scale, &min_, &max_);
+    ImGui::SliderScalar("预测缩放", ImGuiDataType_Double, &m_openxr->prediction_scale, &min_, &max_);
 
-    ImGui::DragFloat4("Raw Left", (float*)&m_raw_projections[0], 0.01f, -100.0f, 100.0f);
-    ImGui::DragFloat4("Raw Right", (float*)&m_raw_projections[1], 0.01f, -100.0f, 100.0f);
+    ImGui::DragFloat4("Raw 左", (float*)&m_raw_projections[0], 0.01f, -100.0f, 100.0f);
+    ImGui::DragFloat4("Raw 右", (float*)&m_raw_projections[1], 0.01f, -100.0f, 100.0f);
 
     // convert m_avg_input_delay (std::chrono::nanoseconds) to milliseconds (float)
     auto duration_float = std::chrono::duration<float, std::milli>(m_avg_input_delay).count();
 
-    ImGui::DragFloat("Avg Input Processing Delay (MS)", &duration_float, 0.00001f);
+    ImGui::DragFloat("平均输入处理延迟 (MS)", &duration_float, 0.00001f);
 }
 
 void VR::on_device_reset() {

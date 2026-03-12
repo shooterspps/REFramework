@@ -14,7 +14,7 @@ public:
 
 public:
     LooseFileLoader();
-    std::string_view get_name() const override { return "LooseFileLoader"; }
+    std::string_view get_name() const override { return "非打包文件加载器"; }
 
     std::optional<std::string> on_initialize() override;
     void on_config_load(const utility::Config& cfg) override;

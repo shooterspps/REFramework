@@ -55,7 +55,7 @@ std::optional<std::string> Graphics::on_initialize() {
     }
 
     s_ray_trace_type.clear();
-    s_ray_trace_type.push_back("Disabled");
+    s_ray_trace_type.push_back("禁用");
 
     s_ray_trace_type.resize(raytracing_enum->get_fields().size() + 1);
 
@@ -255,12 +255,12 @@ void Graphics::on_draw_ui() {
 
 #ifdef RE4
     ImGui::SetNextItemOpen(true, ImGuiCond_::ImGuiCond_Once);
-    if (ImGui::TreeNode("RE4 Scope Tweaks")) {
-        m_scope_tweaks->draw("Enable Scope Tweaks");
+    if (ImGui::TreeNode("RE4 范围调整")) {
+        m_scope_tweaks->draw("启用范围调整");
 
         if (m_scope_tweaks->value()) {
-            m_scope_interlaced_rendering->draw("Enable Interlaced Rendering");
-            m_scope_image_quality->draw("Scope Image Quality");
+            m_scope_interlaced_rendering->draw("启用隔行扫描渲染");
+            m_scope_image_quality->draw("范围图像质量");
         }
 
         ImGui::TreePop();
@@ -268,78 +268,78 @@ void Graphics::on_draw_ui() {
 #endif
 
     ImGui::SetNextItemOpen(true, ImGuiCond_::ImGuiCond_Once);
-    if (ImGui::TreeNode("Ultrawide/FOV Options")) {
-        if (m_ultrawide_fix->draw("Ultrawide/FOV/Aspect Ratio Fix") && m_ultrawide_fix->value() == false) {
+    if (ImGui::TreeNode("超宽屏/FOV 视野选项")) {
+        if (m_ultrawide_fix->draw("超宽屏/FOV 视野/宽高比修复") && m_ultrawide_fix->value() == false) {
             do_ultrawide_fov_restore(true);
         }
 
         if (m_ultrawide_fix->value()) {
 #ifndef MHWILDS
-            m_ultrawide_constrain_ui->draw("Ultrawide: Constrain UI to 16:9");
+            m_ultrawide_constrain_ui->draw("超宽屏：将UI限制为16：9");
             if (m_ultrawide_constrain_ui->value()) {
-                m_ultrawide_constrain_child_ui->draw("Ultrawide: Constrain Child UI to 16:9");
+                m_ultrawide_constrain_child_ui->draw("超宽屏：将子UI限制为16：9");
             }
 #else
-            m_ultrawide_ui_correction->draw("Ultrawide: UI Correction");
+            m_ultrawide_ui_correction->draw("超宽屏：UI校正");
 #endif
-            m_ultrawide_vertical_fov->draw("Ultrawide: Enable Vertical FOV");
-            m_ultrawide_custom_fov->draw("Ultrawide: Override FOV");
-            m_ultrawide_fov_multiplier->draw("Ultrawide: FOV Multiplier");
+            m_ultrawide_vertical_fov->draw("超宽屏: 启用垂直 FOV 视野");
+            m_ultrawide_custom_fov->draw("超宽屏: 覆盖 FOV 视野");
+            m_ultrawide_fov_multiplier->draw("超宽屏: FOV 视野倍数");
         }
 
-        m_force_render_res_to_window->draw("Force Render Resolution to Window Size");
+        m_force_render_res_to_window->draw("强制渲染分辨率为窗口大小");
 
         ImGui::TreePop();
     }
 
     ImGui::SetNextItemOpen(true, ImGuiCond_::ImGuiCond_Once);
-    if (ImGui::TreeNode("GUI Options")) {
-        m_disable_gui->draw("Hide GUI");
-        m_disable_gui_key->draw("Hide GUI key");
+    if (ImGui::TreeNode("GUI 选项")) {
+        m_disable_gui->draw("隐藏 GUI");
+        m_disable_gui_key->draw("隐藏 GUI 按键");
         ImGui::TreePop();
     }
 
 #if TDB_VER >= 69
     ImGui::SetNextItemOpen(true, ImGuiCond_::ImGuiCond_Once);
-    if (ImGui::TreeNode("Ray Tracing Tweaks")) {
-        m_ray_tracing_tweaks->draw("Enable Ray Tracing Tweaks");
+    if (ImGui::TreeNode("光线跟踪调整")) {
+        m_ray_tracing_tweaks->draw("启用光线追踪调整");
 
         if (m_ray_tracing_tweaks->value()) {
-            m_ray_trace_disable_raster_shadows->draw("Disable Raster Shadows (with PT)");
-            m_ray_trace_always_recreate_rt_component->draw("Always Recreate RT Component");
+            m_ray_trace_disable_raster_shadows->draw("禁用光栅阴影 (带 PT)");
+            m_ray_trace_always_recreate_rt_component->draw("始终重新创建RT组件");
             // Description of the above option
             if (ImGui::IsItemHovered()) {
-                ImGui::SetTooltip("Recreates the RT component. Useful if Ray Tracing Tweaks is not working.");
+                ImGui::SetTooltip("重新创建RT组件。如果光线追踪调整功能无效，此选项很有用。");
             }
-            m_ray_trace_type->draw("Ray Trace Type");
+            m_ray_trace_type->draw("光线跟踪类型");
 
             const auto clone_tooltip = 
-                    "Can draw another RT pass over the main RT pass. Useful for hybrid rendering.\n"
-                    "Example: Set Ray Trace Type to Pure and Ray Trace Clone Type to ASVGF. This adds RTGI to the path traced image.\n"
-                    "Path Space Filter is also another good alternative for RTGI but it costs more performance.\n";
+                    "可以在主 RT 通道上绘制另一个 RT 通道. 适用于混合渲染.\n"
+                    "示例: 将光线跟踪类型设为纯路径跟踪和将光线跟踪克隆类型设为 ASVGF. 这将在路径跟踪图像中添加 RTGI.\n"
+                    "路径空间过滤器也是 RTGI 的另一个不错的替代方案, 但它需要更高的性能.\n";
 
-            m_ray_trace_clone_type_pre->draw("Ray Trace Clone Type Pre");
+            m_ray_trace_clone_type_pre->draw("预置光线跟踪克隆类型");
             if (ImGui::IsItemHovered()) {
                 ImGui::SetTooltip(clone_tooltip);
             }
 
-            m_ray_trace_clone_type_post->draw("Ray Trace Clone Type Post");
+            m_ray_trace_clone_type_post->draw("加速光线跟踪克隆类型");
             if (ImGui::IsItemHovered()) {
                 ImGui::SetTooltip(clone_tooltip);
             }
             
-            m_ray_trace_clone_type_true->draw("Ray Trace Clone Type True");
+            m_ray_trace_clone_type_true->draw("精确光线跟踪克隆类型");
             if (ImGui::IsItemHovered()) {
                 const auto true_tooltip =
-                    "Uses a completely separate RT component instead of re-using the main RT component.\n"
-                    "Might crash or have other issues. Use with caution.\n";
+                    "使用完全独立的 RT 组件而不是重复使用主 RT 组件.\n"
+                    "可能会崩溃或出现其它问题. 谨慎使用.\n";
                 ImGui::SetTooltip(true_tooltip);
             }
 
             // Hybrid/pure
             if (is_pt_type(m_ray_trace_type->value()) || is_pt_type(m_ray_trace_clone_type_true->value())) {
-                m_bounce_count->draw("Bounce Count");
-                m_samples_per_pixel->draw("Samples Per Pixel");
+                m_bounce_count->draw("反弹次数");
+                m_samples_per_pixel->draw("每像素采样");
             }
         }
 
@@ -347,45 +347,45 @@ void Graphics::on_draw_ui() {
     }
 
     ImGui::SetNextItemOpen(true, ImGuiCond_::ImGuiCond_Once);
-    if (ImGui::TreeNode("Shader Playground")) {
-        m_shader_playground->draw("Enable Shader Playground");
+    if (ImGui::TreeNode("着色器游戏场")) {
+        m_shader_playground->draw("启用着色器游戏场");
 
         if (m_shader_playground->value()) {  
             //for (size_t i = 0; i < m_replacement_shaders.size(); ++i) {
             uint32_t j = 0;
             for (auto& intercepted : m_intercepted_shaders) {
                 uint32_t i = 0;
-                ImGui::PushID(std::format("Interception Shader {}", j++).c_str());
+                ImGui::PushID(std::format("截取着色器 {}", j++).c_str());
 
                 const auto interception_node_open = ImGui::TreeNode("");
                 ImGui::SameLine();
-                if (ImGui::InputText("Interception Shader", intercepted.name.data(), intercepted.name.size())) {
+                if (ImGui::InputText("截取着色器", intercepted.name.data(), intercepted.name.size())) {
                     intercepted.hash = sdk::murmur_hash::calc32_as_utf8(intercepted.name.data());
                 }
 
                 if (interception_node_open) {
-                    if (ImGui::InputText(std::format("Replace Shader", i).c_str(), intercepted.replace_with_name.data(), intercepted.replace_with_name.size())) {
+                    if (ImGui::InputText(std::format("取代着色器", i).c_str(), intercepted.replace_with_name.data(), intercepted.replace_with_name.size())) {
                         intercepted.replace_with_hash = sdk::murmur_hash::calc32_as_utf8(intercepted.replace_with_name.data());
                     }
 
                     for (auto& replacement : intercepted.replacement_shaders) {
                         i++;
-                        ImGui::PushID(std::format("Shader {}", i).c_str());
+                        ImGui::PushID(std::format("着色器 {}", i).c_str());
                         const auto node_open = ImGui::TreeNodeEx("");
                         ImGui::SameLine();
-                        if (ImGui::InputText(std::format("Custom Shader {}", i).c_str(), replacement.shader.data(), replacement.shader.size())) {
+                        if (ImGui::InputText(std::format("自定义着色器 {}", i).c_str(), replacement.shader.data(), replacement.shader.size())) {
                             replacement.hash = sdk::murmur_hash::calc32_as_utf8(replacement.shader.data());
                         }
 
                         if (node_open) {
-                            ImGui::Combo("Dispatch Mode", (int*)&replacement.dispatch_mode, s_shader_dispatch_modes.data(), s_shader_dispatch_modes.size());
+                            ImGui::Combo("调度模式", (int*)&replacement.dispatch_mode, s_shader_dispatch_modes.data(), s_shader_dispatch_modes.size());
 
-                            ImGui::InputInt("Thread Group X", (int32_t*)&replacement.thread_group_x);
-                            ImGui::InputInt("Thread Group Y", (int32_t*)&replacement.thread_group_y);
-                            ImGui::InputInt("Thread Group Z", (int32_t*)&replacement.thread_group_z);
-                            ImGui::InputInt("Constant", (int32_t*)&replacement.constant);
+                            ImGui::InputInt("线程组 X", (int32_t*)&replacement.thread_group_x);
+                            ImGui::InputInt("线程组 Y", (int32_t*)&replacement.thread_group_y);
+                            ImGui::InputInt("线程组 Z", (int32_t*)&replacement.thread_group_z);
+                            ImGui::InputInt("常量", (int32_t*)&replacement.constant);
 
-                            ImGui::Checkbox("Valid hash", &replacement.valid_hash);
+                            ImGui::Checkbox("有效哈希值", &replacement.valid_hash);
 
                             ImGui::TreePop();
                         }

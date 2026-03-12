@@ -90,7 +90,7 @@ void FirstPerson::on_draw_ui() {
         ImGui::DragFloat4("##", (float*)&elem, 1.0f, -1.0f, 1.0f);
     }*/
 
-    if (m_enabled->draw("Enabled")) {
+    if (m_enabled->draw("启用")) {
         // Disable fov and camera light changes
         m_wants_disable = !m_enabled->value();
     }
@@ -98,19 +98,19 @@ void FirstPerson::on_draw_ui() {
     ImGui::SameLine();
 
     // Revert the updateCamera value to normal
-    if (m_show_in_cutscenes->draw("Show In Cutscenes") && m_camera_system != nullptr && m_camera_system->mainCameraController != nullptr) {
+    if (m_show_in_cutscenes->draw("在场景中显示") && m_camera_system != nullptr && m_camera_system->mainCameraController != nullptr) {
         m_camera_system->mainCameraController->updateCamera = true;
     }
 
     ImGui::Separator();
-    ImGui::Text("VR Specific Settings");
+    ImGui::Text("VR 具体设置");
 
-    m_smooth_xz_movement->draw("Smooth XZ Movement (VR)");
-    m_smooth_y_movement->draw("Smooth Y Movement (VR)");
-    m_roomscale->draw("Roomscale Movement (VR)");
+    m_smooth_xz_movement->draw("平滑 XZ 运动 (VR)");
+    m_smooth_y_movement->draw("平滑 Y 运动 (VR)");
+    m_roomscale->draw("室内运动 (VR)");
 
     static bool adjust_hand_offset{false};
-    ImGui::Checkbox("Adjust Hand Offset", &adjust_hand_offset);
+    ImGui::Checkbox("调整指针偏移", &adjust_hand_offset);
 
     if (adjust_hand_offset) {
         auto& vr = VR::get();
@@ -162,57 +162,57 @@ void FirstPerson::on_draw_ui() {
         }
     }
 
-    ImGui::DragFloat4("Scale Debug", (float*)&m_scale_debug.x, 1.0f, -1.0f, 1.0f);
-    ImGui::DragFloat4("Scale Debug 2", (float*)&m_scale_debug2.x, 1.0f, -1.0f, 1.0f);
-    ImGui::DragFloat4("Offset Debug", (float*)&m_offset_debug.x, 1.0f, -1.0f, 1.0f);
-    ImGui::DragFloat("VR Scale", (float*)&m_vr_scale, 0.01f, 0.01f, 1.0f);
+    ImGui::DragFloat4("缩放调试", (float*)&m_scale_debug.x, 1.0f, -1.0f, 1.0f);
+    ImGui::DragFloat4("缩放调试 2", (float*)&m_scale_debug2.x, 1.0f, -1.0f, 1.0f);
+    ImGui::DragFloat4("偏移调试", (float*)&m_offset_debug.x, 1.0f, -1.0f, 1.0f);
+    ImGui::DragFloat("VR 缩放", (float*)&m_vr_scale, 0.01f, 0.01f, 1.0f);
 
-    ImGui::DragFloat3("Controller rotation (Left)", (float*)&m_left_hand_rotation_offset, 0.1f, -360.0f, 360.0f);
-    ImGui::DragFloat3("Controller rotation (Right)", (float*)&m_right_hand_rotation_offset, 0.1f, -360.0f, 360.0f);
-    ImGui::DragFloat3("Controller position (Left)", (float*)&m_left_hand_position_offset, 0.01f, -2.0f, 2.0f);
-    ImGui::DragFloat3("Controller position (Right)", (float*)&m_right_hand_position_offset, 0.01f, -2.0f, 2.0f);
+    ImGui::DragFloat3("控制器旋转 (左)", (float*)&m_left_hand_rotation_offset, 0.1f, -360.0f, 360.0f);
+    ImGui::DragFloat3("控制器旋转 (右)", (float*)&m_right_hand_rotation_offset, 0.1f, -360.0f, 360.0f);
+    ImGui::DragFloat3("控制器位置 (左)", (float*)&m_left_hand_position_offset, 0.01f, -2.0f, 2.0f);
+    ImGui::DragFloat3("控制器位置 (右)", (float*)&m_right_hand_position_offset, 0.01f, -2.0f, 2.0f);
 
-    ImGui::DragFloat3("Controller 1", (float*)&m_last_controller_euler[0].x, 1.0f, -360.0f, 360.0f);
-    ImGui::DragFloat3("Controller 2", (float*)&m_last_controller_euler[1].x, 1.0f, -360.0f, 360.0f);
+    ImGui::DragFloat3("控制器 1", (float*)&m_last_controller_euler[0].x, 1.0f, -360.0f, 360.0f);
+    ImGui::DragFloat3("控制器 2", (float*)&m_last_controller_euler[1].x, 1.0f, -360.0f, 360.0f);
 
     ImGui::Separator();
-    ImGui::Text("General Settings");
+    ImGui::Text("常规设置");
 
-    m_disable_light_source->draw("Disable Camera Light");
-    m_hide_mesh->draw("Hide Joint Mesh");
+    m_disable_light_source->draw("禁用摄像机灯");
+    m_hide_mesh->draw("隐藏网格连接");
 
     ImGui::SameLine();
-    m_rotate_mesh->draw("Force Rotate Joint");
-    m_rotate_body->draw("Rotate Body");
+    m_rotate_mesh->draw("强制旋转关节");
+    m_rotate_body->draw("旋转身体");
 
-    if (m_disable_vignette->draw("Disable Vignette") && m_disable_vignette->value() == false) {
+    if (m_disable_vignette->draw("关闭暗角") && m_disable_vignette->value() == false) {
         set_vignette(via::render::ToneMapping::Vignetting::KerarePlus);
     }
 
-    m_toggle_key->draw("Change Toggle Key");
+    m_toggle_key->draw("更改切换按键");
 
-    ImGui::SliderFloat3("CameraOffset", (float*)&m_attach_offsets[m_player_name], -2.0f, 2.0f, "%.3f", 1.0f);
+    ImGui::SliderFloat3("摄像机偏移", (float*)&m_attach_offsets[m_player_name], -2.0f, 2.0f, "%.3f", 1.0f);
 
-    m_camera_scale->draw("CameraSpeed");
-    m_bone_scale->draw("CameraShake");
+    m_camera_scale->draw("摄像机速度");
+    m_bone_scale->draw("摄影机抖动");
 
     if (m_camera_system != nullptr) {
-        if (m_fov_offset->draw("FOVOffset")) {
+        if (m_fov_offset->draw("FOV 视野偏移")) {
             update_fov(m_camera_system->cameraController);
         }
 
-        if (m_fov_mult->draw("FOVMultiplier")) {
+        if (m_fov_mult->draw("FOV 倍数")) {
             update_fov(m_camera_system->cameraController);
             m_last_fov_mult = m_fov_mult->value();
         }
 
         m_current_fov->value() = m_camera_system->cameraController->activeCamera->fov;
-        m_current_fov->draw("CurrentFOV");
+        m_current_fov->draw("FOV 当前视野");
     }
 
-    m_body_rotate_speed->draw("BodyRotateSpeed");
+    m_body_rotate_speed->draw("身体旋转速度");
 
-    if (ImGui::InputText("Joint", m_attach_bone_imgui.data(), 256)) {
+    if (ImGui::InputText("关节", m_attach_bone_imgui.data(), 256)) {
         m_attach_bone = std::wstring{ std::begin(m_attach_bone_imgui), std::end(m_attach_bone_imgui) };
     }
 
@@ -227,7 +227,7 @@ void FirstPerson::on_draw_ui() {
 }
 
 void FirstPerson::on_lua_state_created(sol::state& state) {
-    state.new_usertype<FirstPerson>("FirstPerson",
+    state.new_usertype<FirstPerson>("第一人称",
         "new", sol::no_constructor,
         "is_enabled", &FirstPerson::is_enabled,
         "will_be_used", &FirstPerson::will_be_used,

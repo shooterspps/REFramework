@@ -16,7 +16,7 @@
 // And RE3 has unfortunately decided to implement an integrity check on the executable code of the process
 class IntegrityCheckBypass : public Mod {
 public:
-    std::string_view get_name() const override { return "IntegrityCheckBypass"; };
+    std::string_view get_name() const override { return "绕过完整性检查"; };
     std::optional<std::string> on_initialize() override;
 
     void on_frame() override;

@@ -61,7 +61,7 @@ public:
         return instance;
     }
 
-    std::string_view get_name() const override { return "Camera"; };
+    std::string_view get_name() const override { return "摄像机"; };
 
     void on_config_load(const utility::Config& cfg) override;
     void on_config_save(utility::Config& cfg) override;

@@ -129,11 +129,11 @@ void ChainViewer::on_draw_dev_ui() {
         return;
     }
 
-    if (m_enabled->draw("Enabled") && !m_enabled->value()) {
+    if (m_enabled->draw("启用") && !m_enabled->value()) {
         // todo
     }
 
-    if (ImGui::SliderFloat("Effect Alpha", &m_effect_alpha, 0.0f, 1.0f)) {
+    if (ImGui::SliderFloat("Alpha 效果", &m_effect_alpha, 0.0f, 1.0f)) {
         m_effect_dirty = true;
     }
 }
@@ -243,7 +243,7 @@ void ChainViewer::on_frame() {
     IMGUIZMO_NAMESPACE::SetDrawlist(ImGui::GetBackgroundDrawList());
     IMGUIZMO_NAMESPACE::SetRect(0, 0, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
 
-    ImGui::Begin("Chains");
+    ImGui::Begin("链式");
 
     static auto chain_type = sdk::find_type_definition("via.motion.Chain");
     static auto chain_runtime_type = chain_type->get_runtime_type();
@@ -446,11 +446,11 @@ void ChainViewer::on_frame() {
                         ImGui::SetNextItemOpen(true, ImGuiCond_::ImGuiCond_Once);
 
                     #if TDB_VER >= 69 && !defined(MHRISE_CHAIN70)
-                        if (ImGui::TreeNode(&collider, "Collision %d %d", i, j)) {
+                        if (ImGui::TreeNode(&collider, "碰撞 %d %d", i, j)) {
                     #else
-                        if (ImGui::TreeNode(&collider, "Collision %d", i)) {
+                        if (ImGui::TreeNode(&collider, "碰撞 %d", i)) {
                     #endif
-                            auto made_joint_node = ImGui::TreeNode(&collider.joint, "Joint");
+                            auto made_joint_node = ImGui::TreeNode(&collider.joint, "关节");
 
                             const auto col = ImVec4{100.0f / 255.0f, 149.0f / 255.0f, 237.0f / 255.0f, 255 / 255.0f};
 
@@ -464,7 +464,7 @@ void ChainViewer::on_frame() {
                                 ImGui::TreePop();
                             }
 
-                            made_joint_node = ImGui::TreeNode(&collider.pair_joint, "Pair Joint");
+                            made_joint_node = ImGui::TreeNode(&collider.pair_joint, "双关节");
 
                             if (collider.pair_joint != nullptr) {
                                 ImGui::SameLine();
@@ -476,11 +476,11 @@ void ChainViewer::on_frame() {
                                 ImGui::TreePop();
                             }
 
-                            ImGui::DragFloat("Radius", (float*)&collider.radius, 0.01f, 0.0f, 0.0f);
-                            ImGui::DragInt("Flags", (int*)&collider.flags, 1, 0, 0);
+                            ImGui::DragFloat("半径", (float*)&collider.radius, 0.01f, 0.0f, 0.0f);
+                            ImGui::DragInt("标志", (int*)&collider.flags, 1, 0, 0);
 
-                            ImGui::DragFloat3("Offset", (float*)&collider.offset, 0.01f, 0.0f, 0.0f);
-                            ImGui::DragFloat3("Pair Offset", (float*)&collider.pair_offset, 0.01f, 0.0f, 0.0f);
+                            ImGui::DragFloat3("偏移", (float*)&collider.offset, 0.01f, 0.0f, 0.0f);
+                            ImGui::DragFloat3("双偏移", (float*)&collider.pair_offset, 0.01f, 0.0f, 0.0f);
                             ImGui::TreePop();
                         }
 

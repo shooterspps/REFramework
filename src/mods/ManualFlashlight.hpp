@@ -27,7 +27,7 @@ public:
     
     void toggle_flashlight();
     
-    std::string_view get_name() const override { return "ManualFlashlight"; }
+    std::string_view get_name() const override { return "手动闪光灯"; }
 
     void on_frame() override;
     void on_draw_ui() override;

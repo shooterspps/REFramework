@@ -34,25 +34,25 @@ std::optional<std::string> REFrameworkConfig::on_initialize() {
 }
 
 void REFrameworkConfig::on_draw_ui() {
-    if (!ImGui::CollapsingHeader("Configuration")) {
+    if (!ImGui::CollapsingHeader("配置")) {
         return;
     }
 
-    ImGui::TreePush("Configuration");
+    ImGui::TreePush("配置");
 
     bool changed = false;
 
-    changed |= m_menu_key->draw("Menu Key");
-    changed |= m_show_cursor_key->draw("Show Cursor Key");
-    changed |= m_remember_menu_state->draw("Remember Menu Open/Closed State");
-    changed |= m_always_show_cursor->draw("Draw Cursor With Menu Open");
+    changed |= m_menu_key->draw("打开菜单按键");
+    changed |= m_show_cursor_key->draw("显示指针轨迹按键");
+    changed |= m_remember_menu_state->draw("记忆菜单的打开/关闭状态");
+    changed |= m_always_show_cursor->draw("打开菜单时绘制指针轨迹");
 
-    if (m_font_file->draw("Font")) {
+    if (m_font_file->draw("字体")) {
         g_framework->set_font(m_font_file->value());
         changed = true;
     }
 
-    if (m_font_size->draw("Font Size")) {
+    if (m_font_size->draw("字体大小")) {
         g_framework->set_font_size(m_font_size->value());
         changed = true;
     }

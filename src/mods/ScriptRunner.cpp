@@ -1057,11 +1057,11 @@ void ScriptRunner::on_draw_ui() {
 
     if (ImGui::CollapsingHeader(get_name().data())) {
         if (m_last_online_match_state) {
-            ImGui::TextWrapped("Online match detected. Scripts will not be loaded. Existing scripts have been unloaded.");
+            ImGui::TextWrapped("检测到在线匹配. 将不会加载脚本. 已卸载现有脚本.");
             return;
         }
 
-        if (ImGui::Button("Run script")) {
+        if (ImGui::Button("运行脚本")) {
             OPENFILENAME ofn{};
             char file[260]{};
 
@@ -1069,7 +1069,7 @@ void ScriptRunner::on_draw_ui() {
             ofn.hwndOwner = g_framework->get_window();
             ofn.lpstrFile = file;
             ofn.nMaxFile = sizeof(file);
-            ofn.lpstrFilter = "Lua script files (*.lua)\0*.lua\0";
+            ofn.lpstrFilter = "Lua 脚本文件 (*.lua)\0*.lua\0";
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
             if (GetOpenFileName(&ofn) != FALSE) {
@@ -1081,13 +1081,13 @@ void ScriptRunner::on_draw_ui() {
 
         ImGui::SameLine();
 
-        if (ImGui::Button("Reset scripts")) {
+        if (ImGui::Button("重置脚本")) {
             reset_scripts();
         }
 
         ImGui::SameLine();
 
-        if (ImGui::Button("Spawn Debug Console")) {
+        if (ImGui::Button("生成调试控制台")) {
             if (!m_console_spawned) {
                 AllocConsole();
                 freopen("CONIN$", "r", stdin);
@@ -1098,54 +1098,54 @@ void ScriptRunner::on_draw_ui() {
             }
         }
         //Garbage collection currently only showing from main lua state, might rework to show total later?
-        if (ImGui::TreeNode("Garbage Collection Stats")) {
+        if (ImGui::TreeNode("废弃收集统计")) {
             std::scoped_lock _{ m_access_mutex };
 
             auto g = G(m_main_state->lua().lua_state());
             const auto bytes_in_use = g->totalbytes + g->GCdebt;
 
-            ImGui::Text("Megabytes in use: %.2f", (float)bytes_in_use / 1024.0f / 1024.0f);
+            ImGui::Text("使用中的兆字节: %.2f", (float)bytes_in_use / 1024.0f / 1024.0f);
 
             ImGui::TreePop();
         }
 
-        if (m_gc_handler->draw("Garbage Collection Handler")) {
+        if (m_gc_handler->draw("废弃收集处理")) {
             std::scoped_lock _{ m_access_mutex };
             m_main_state->gc_data_changed(make_gc_data());
         }
 
-        if (m_gc_mode->draw("Garbage Collection Mode")) {
+        if (m_gc_mode->draw("废弃回收模式")) {
             std::scoped_lock _{ m_access_mutex };
             m_main_state->gc_data_changed(make_gc_data());
         }
 
         if ((uint32_t)m_gc_mode->value() == (uint32_t)ScriptState::GarbageCollectionMode::GENERATIONAL) {
-            if (m_gc_minor_multiplier->draw("Minor GC Multiplier")) {
+            if (m_gc_minor_multiplier->draw("次要 GC 倍数")) {
                 std::scoped_lock _{ m_access_mutex };
                 m_main_state->gc_data_changed(make_gc_data());
             }
 
-            if (m_gc_major_multiplier->draw("Major GC Multiplier")) {
+            if (m_gc_major_multiplier->draw("主要 GC 倍数")) {
                 std::scoped_lock _{ m_access_mutex };
                 m_main_state->gc_data_changed(make_gc_data());
             }
         }
 
         if (m_gc_handler->value() == (int32_t)ScriptState::GarbageCollectionHandler::REFRAMEWORK_MANAGED) {
-            if (m_gc_type->draw("Garbage Collection Type")) {
+            if (m_gc_type->draw("废弃收集类型")) {
                 std::scoped_lock _{ m_access_mutex };
                 m_main_state->gc_data_changed(make_gc_data());
             }
 
             if ((uint32_t)m_gc_mode->value() != (uint32_t)ScriptState::GarbageCollectionMode::GENERATIONAL) {
-                if (m_gc_budget->draw("Garbage Collection Budget")) {
+                if (m_gc_budget->draw("废弃收集预算")) {
                     std::scoped_lock _{ m_access_mutex };
                     m_main_state->gc_data_changed(make_gc_data());
                 }
             }
         }
 
-        m_log_to_disk->draw("Log Lua Errors to Disk");
+        m_log_to_disk->draw("Lua 错误日志到磁盘");
 
         if (!m_last_script_error.empty()) {
             std::shared_lock _{m_script_error_mutex};
@@ -1154,17 +1154,17 @@ void ScriptRunner::on_draw_ui() {
             const auto diff = now - m_last_script_error_time;
             const auto sec = std::chrono::duration<float>(diff).count();
 
-            ImGui::TextWrapped("Last Error Time: %.2f seconds ago", sec);
+            ImGui::TextWrapped("上次出错时间: %.2f 秒前", sec);
 
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-            ImGui::TextWrapped("Last Script Error: %s", m_last_script_error.data());
+            ImGui::TextWrapped("上次脚本错误: %s", m_last_script_error.data());
             ImGui::PopStyleColor();
         } else {
-            ImGui::TextWrapped("No Script Errors... yet!");
+            ImGui::TextWrapped("还未出现脚本错误...!");
         }
 
         if (!m_known_scripts.empty()) {
-            ImGui::Text("Known scripts:");
+            ImGui::Text("已运行脚本:");
 
             for (auto&& name : m_known_scripts) {
                 if (ImGui::Checkbox(name.data(), &m_loaded_scripts_map[name])) {
@@ -1173,7 +1173,7 @@ void ScriptRunner::on_draw_ui() {
                 }
             }
         } else {
-            ImGui::Text("No scripts loaded.");
+            ImGui::Text("未加载脚本.");
         }
     }
 
@@ -1181,7 +1181,7 @@ void ScriptRunner::on_draw_ui() {
         std::scoped_lock _{ m_access_mutex };
 
 
-        if (ImGui::CollapsingHeader("Script Generated UI")) {
+        if (ImGui::CollapsingHeader("脚本生成界面")) {
             if (m_states.empty()) {
                 return;
             }

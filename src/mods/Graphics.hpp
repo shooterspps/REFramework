@@ -19,7 +19,7 @@ public:
 public:
     std::optional<std::string> on_initialize() override;
 
-    std::string_view get_name() const override { return "Graphics"; };
+    std::string_view get_name() const override { return "图形"; };
 
     void on_lua_state_created(sol::state& lua) override;
     void on_config_load(const utility::Config& cfg) override;
@@ -82,9 +82,9 @@ private:
     };
 
     static const inline std::array<const char*, 3> s_shader_dispatch_modes {
-        "Dispatch",
-        "Dispatch32BitConstant",
-        "DispatchRay"
+        "调度",
+        "调度32Bit常量",
+        "调度光线"
     };
 
     struct ReplacementShader {
@@ -222,13 +222,13 @@ private:
 
     // We will replace this dynamically with reflected data upon loading
     static inline std::vector<std::string> s_ray_trace_type {
-        "Disabled",
-        "Ambient Occlusion",
-        "Hybrid Path Tracing",
-        "Pure Path Tracing",
-        "Path Space Filter",
-        "Screen Space Photon Mapping",
-        "Debug",
+        "禁用",
+        "环境遮蔽",
+        "混合路径追踪",
+        "纯路径跟踪",
+        "路径空间过滤器",
+        "屏幕空间光子映射",
+        "调试",
         "A S V G F",
     };
 
@@ -243,7 +243,7 @@ private:
     static bool is_pt_type(uint8_t type) {
         const auto name = get_ray_trace_type_name(type);
 
-        if (name == "Hybrid Path Tracing" || name == "Pure Path Tracing") {
+        if (name == "混合路径追踪" || name == "纯路径跟踪") {
             return true;
         }
 
@@ -258,7 +258,7 @@ private:
     static bool is_pure_pt_type(uint8_t type) {
         const auto name = get_ray_trace_type_name(type);
 
-        if (name == "Pure Path Tracing" || name == "Prototype Reference") {
+        if (name == "纯路径跟踪" || name == "Prototype Reference") {
             return true;
         }
 

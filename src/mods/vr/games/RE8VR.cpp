@@ -114,11 +114,11 @@ void RE8VR::on_draw_ui() {
         return;
     }
 
-    m_hide_upper_body->draw("Hide Upper Body");
-    m_hide_lower_body->draw("Hide Lower Body");
-    m_hide_arms->draw("Hide Arms");
-    m_hide_upper_body_cutscenes->draw("Auto Hide Upper Body in Cutscenes");
-    m_hide_lower_body_cutscenes->draw("Auto Hide Lower Body in Cutscenes");
+    m_hide_upper_body->draw("隐藏上半身");
+    m_hide_lower_body->draw("隐藏下半身");
+    m_hide_arms->draw("隐藏武器");
+    m_hide_upper_body_cutscenes->draw("场景中自动隐藏上半身");
+    m_hide_lower_body_cutscenes->draw("场景中自动隐藏下半身");
 }
 
 void RE8VR::on_pre_application_entry(void* entry, const char* name, size_t hash) {
@@ -591,7 +591,7 @@ void RE8VR::fix_player_camera(::REManagedObject* player_camera) {
     if (base_transform_solver != nullptr && *base_transform_solver != nullptr) {
 #ifdef RE8
         auto current_type_obj = *sdk::get_object_field<::REManagedObject*>(*base_transform_solver, "<currentType>k__BackingField");
-        auto current_type = *sdk::get_object_field<int>(current_type_obj, "Value");
+        auto current_type = *sdk::get_object_field<int>(current_type_obj, "值");
 
         auto vehicle = sdk::get_object_field<::REGameObject*>(player_camera, "RideVehicleObject");
         m_has_vehicle = vehicle != nullptr && *vehicle != nullptr;
@@ -667,7 +667,7 @@ void RE8VR::fix_player_camera(::REManagedObject* player_camera) {
             auto posture_param = sdk::get_object_field<::REManagedObject*>(*param_container, "PostureParam");
 
             if (posture_param != nullptr && *posture_param != nullptr) {
-                auto current_camera_offset_ptr = sdk::get_object_field<glm::vec4>(*posture_param, "CameraOffset");
+                auto current_camera_offset_ptr = sdk::get_object_field<glm::vec4>(*posture_param, "摄像机偏移");
 
                 if (current_camera_offset_ptr != nullptr) {
                     auto current_camera_offset = *current_camera_offset_ptr;

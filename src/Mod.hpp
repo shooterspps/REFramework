@@ -369,7 +369,7 @@ public:
             }
 
             ImGui::SameLine();
-            ImGui::Text("Press any key...");
+            ImGui::Text("请按任意键...");
         }
         else {
             ImGui::SameLine();
@@ -378,7 +378,7 @@ public:
                 ImGui::Text("%i", m_value);
             }
             else {
-                ImGui::Text("Not bound");
+                ImGui::Text("未绑定");
             }
         }
 

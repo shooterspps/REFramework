@@ -35,7 +35,7 @@ public:
     // specifics (`reframework_plugin_initialize`) are still delayed until REFramework is fully setup.
     void early_init();
 
-    std::string_view get_name() const override { return "PluginLoader"; }
+    std::string_view get_name() const override { return "加载插件"; }
     std::optional<std::string> initialize_plugins();
     void on_frame() override;
     void on_draw_ui() override;

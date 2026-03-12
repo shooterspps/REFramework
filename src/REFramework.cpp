@@ -608,7 +608,7 @@ REFramework::REFramework(HMODULE reframework_module)
                     continue;
                 }
 
-                if (std::string_view{t->get_name()} == "Renderer" && std::string_view{t->get_namespace()} == "via.render") {
+                if (std::string_view{t->get_name()} == "渲染器" && std::string_view{t->get_namespace()} == "via.render") {
                     spdlog::info("Renderer type found manually @ {:x}", (uintptr_t)t);
                     renderer_t = t;
                     break;
@@ -1665,20 +1665,20 @@ void REFramework::draw_ui() {
     ImGui::SetNextWindowSize(ImVec2(300, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
 
     ImGui::PushFont(m_default_font, m_font_size);
-    static const auto REF_NAME = std::format("REFramework [{}+{}-{:.8}]", REF_TAG, REF_COMMITS_PAST_TAG, REF_COMMIT_HASH);
+    static const auto REF_NAME = std::format("RE引擎框架 [{}+{}-{:.8}]", REF_TAG, REF_COMMITS_PAST_TAG, REF_COMMIT_HASH);
     bool is_open = true;
     ImGui::Begin(REF_NAME.c_str(), &is_open);
-    ImGui::Text("Default Menu Key: Insert");
-    ImGui::Checkbox("Transparency", &m_ui_option_transparent);
+    ImGui::Text("默认打开菜单按键: Insert");
+    ImGui::Checkbox("透明", &m_ui_option_transparent);
     ImGui::SameLine();
     ImGui::Text("(?)");
     if (ImGui::IsItemHovered())
-        ImGui::SetTooltip("Makes the UI transparent when not focused.");
-    ImGui::Checkbox("Input Passthrough", &m_ui_passthrough);
+        ImGui::SetTooltip("界面未选中时透明.");
+    ImGui::Checkbox("直通输入", &m_ui_passthrough);
     ImGui::SameLine();
     ImGui::Text("(?)");
     if (ImGui::IsItemHovered())
-        ImGui::SetTooltip("Allows mouse and keyboard inputs to register to the game while the UI is focused.");
+        ImGui::SetTooltip("使用鼠标, 键盘操作界面时允许同时游戏.");
 
     // Mods:
     draw_about();
@@ -1686,10 +1686,11 @@ void REFramework::draw_ui() {
     if (m_error.empty() && m_game_data_initialized) {
         m_mods->on_draw_ui();
     } else if (!m_game_data_initialized) {
-        ImGui::TextWrapped("REFramework is currently initializing...");
-        ImGui::TextWrapped("This menu will close after initialization if you have the remember option enabled.");
+        ImGui::TextWrapped("正在初始化RE引擎框架...");
+        ImGui::TextWrapped("如果启用了 \"记忆菜单的打开/关闭状态\" 并且关闭了菜单, 在初始化结束后菜单将关闭.");
+        ImGui::TextWrapped("免费分享, 仅限学习交流!");
     } else if (!m_error.empty()) {
-        ImGui::TextWrapped("REFramework error: %s", m_error.c_str());
+        ImGui::TextWrapped("RE引擎框架错误: %s", m_error.c_str());
     }
 
     m_last_window_pos = ImGui::GetWindowPos();
@@ -1712,27 +1713,27 @@ void REFramework::draw_ui() {
 }
 
 void REFramework::draw_about() {
-    if (!ImGui::CollapsingHeader("About")) {
+    if (!ImGui::CollapsingHeader("关于")) {
         return;
     }
 
-    ImGui::TreePush("About");
+    ImGui::TreePush("关于");
 
-    ImGui::Text("Author: praydog");
-    ImGui::Text("Inspired by the Kanan project.");
+    ImGui::Text("作者: praydog");
+    ImGui::Text("项目灵感来自 Kanan.");
     ImGui::Text("https://github.com/praydog/REFramework");
     ImGui::Text("http://praydog.com");
-    ImGui::Text("Branch: %s", REF_BRANCH);
-    ImGui::Text("Commits: %i", REF_TOTAL_COMMITS);
-    ImGui::Text("Commit hash: %s", std::format("{:.8}", REF_COMMIT_HASH).c_str());
-    ImGui::Text("Tag: %s", REF_TAG);
+    ImGui::Text("分支: %s", REF_BRANCH);
+    ImGui::Text("提交: %i", REF_TOTAL_COMMITS);
+    ImGui::Text("提交哈希值: %s", std::format("{:.8}", REF_COMMIT_HASH).c_str());
+    ImGui::Text("版本: %s", REF_TAG);
 #ifdef REF_COMMITS_PAST_TAG
-    ImGui::Text("Commits past tag: %i", REF_COMMITS_PAST_TAG);
+    ImGui::Text("已提交版本: %i", REF_COMMITS_PAST_TAG);
 #endif
-    ImGui::Text("Build date: %s", REF_BUILD_DATE);
-    ImGui::Text("Build time: %s", REF_BUILD_TIME);
+    ImGui::Text("构建日期: %s", REF_BUILD_DATE);
+    ImGui::Text("构建时间: %s", REF_BUILD_TIME);
 
-    if (ImGui::TreeNode("Licenses")) {
+    if (ImGui::TreeNode("许可证")) {
         struct License {
             std::string name;
             std::string text;
@@ -1763,6 +1764,12 @@ void REFramework::draw_about() {
             }
         }
 
+        ImGui::TreePop();
+    }
+            if (ImGui::CollapsingHeader("中文版")) {
+        ImGui::TreePush("中文版");
+
+    ImGui::Text("构建: shooterspps");
         ImGui::TreePop();
     }
 
@@ -1799,15 +1806,15 @@ void REFramework::draw_about() {
                 }
             }
 
-            ImGui::Text("Engine information");
-            ImGui::Text(" Config: %s", engine_config.c_str());
-            ImGui::Text(" Version: %s", clean_version.c_str());
-            ImGui::Text(" TDB Version: %i", tdb_version);
+            ImGui::Text("引擎信息");
+            ImGui::Text(" 构建: %s", engine_config.c_str());
+            ImGui::Text(" 版本: %s", clean_version.c_str());
+            ImGui::Text(" TDB 版本: %i", tdb_version);
         } catch(...) {
-            ImGui::Text("Unable to determine engine version.");
+            ImGui::Text("无法确定引擎版本.");
         }
     } else {
-        ImGui::Text("Unable to determine engine version.");
+        ImGui::Text("无法确定引擎版本.");
     }
 
     ImGui::TreePop();
@@ -2103,7 +2110,7 @@ bool REFramework::initialize_game_data() {
 
             if (e) {
                 if (e->empty()) {
-                    m_error = "An unknown error has occurred.";
+                    m_error = "出现未知错误.";
                 } else {
                     m_error = *e;
                 }
@@ -2125,7 +2132,7 @@ bool REFramework::initialize_game_data() {
             spdlog::error("Initialization of mods failed. Reason: {}", m_error);
         }
         catch(...) {
-            m_error = "An exception has occurred during initialization.";
+            m_error = "初始化过程中出现异常.";
             m_game_data_initialized = true;
             spdlog::error("Initialization of mods failed. Reason: exception thrown.");
         }
@@ -2183,7 +2190,7 @@ bool REFramework::first_frame_initialize() {
 
     if (e) {
         if (e->empty()) {
-            m_error = "An unknown error has occurred.";
+            m_error = "出现未知错误.";
         } else {
             m_error = *e;
         }

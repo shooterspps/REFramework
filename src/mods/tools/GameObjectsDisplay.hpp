@@ -14,7 +14,7 @@
 class GameObjectsDisplay : public Tool {
 public:
     std::string_view get_name() const override {
-        return "GameObjectsDisplay";
+        return "游戏物件显示";
     }
     
     std::optional<std::string> on_initialize_d3d_thread() override;

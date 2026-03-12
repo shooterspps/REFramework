@@ -7,7 +7,7 @@ class DeveloperTools : public Mod {
 public:
     DeveloperTools();
 
-    std::string_view get_name() const override { return "DeveloperTools"; };
+    std::string_view get_name() const override { return "开发者工具"; };
 
     // Only one we need right now.
     void on_draw_ui() override;
