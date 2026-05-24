@@ -68,7 +68,7 @@ void LooseTextureLoader::on_draw_ui() {
 
 
     if (ImGui::TreeNode("Loose Texture")) {
-        if (m_enabled->draw("Enable")) {
+        if (m_enabled->draw("启用")) {
             g_framework->request_save_config();
         }
 

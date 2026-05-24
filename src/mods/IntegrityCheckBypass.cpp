@@ -93,7 +93,7 @@ std::optional<std::string> IntegrityCheckBypass::on_initialize() {
             but didn't bother to patch it out. Reason being that it seems to only get called when loading is finished. 
             Maybe some more investigation is required here?
             */
-            // The above function names can be found within il2cpp_dump.json, which is dumped with REFramework's "Dump SDK" button in developer mode.
+            // The above function names can be found within il2cpp_dump.json, which is dumped with REFramework's "转储 SDK" button in developer mode.
         };
     }
 
@@ -2641,21 +2641,21 @@ void IntegrityCheckBypass::on_draw_ui() {
     if (sdk::GameIdentity::get().tdb_ver() < 81) {
         return;
     }
-    if (!ImGui::CollapsingHeader("PAK Directory Loading")) {
+    if (!ImGui::CollapsingHeader("PAK目录加载")) {
         return;
     }
 
-    ImGui::Text("Allow loading PAKs inside %s directory. PAKs can be of any filename and ends with .pak (case-sensitive)", IntegrityCheckBypass::CUSTOM_PAK_DIRECTORY_PATH);
-    ImGui::Text("Restart the game to apply changes.");
+    ImGui::Text("允许加载 %s 目录内的 PAK 文件。PAK 文件可以是任意文件名，以 .pak 结尾（区分大小写）", IntegrityCheckBypass::CUSTOM_PAK_DIRECTORY_PATH);
+    ImGui::Text("重启游戏以使更改生效。");
 
     auto changed = false;
-    changed |= m_load_pak_directory->draw("Enable");
+    changed |= m_load_pak_directory->draw("启用");
 
     if (changed) {
         g_framework->request_save_config();
     }
 
-    if (ImGui::TreeNode("List of custom PAKs loaded:")) {
+    if (ImGui::TreeNode("已加载的自定义 PAK 列表：")) {
         for (const auto& pak_path : m_custom_pak_in_directory_paths) {
             auto pak_utf8 = utility::narrow(pak_path);
             ImGui::BulletText("%s", pak_utf8.c_str());

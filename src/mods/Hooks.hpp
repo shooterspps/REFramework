@@ -12,7 +12,7 @@ public:
 public:
     Hooks();
 
-    std::string_view get_name() const override { return "Hooks"; };
+    std::string_view get_name() const override { return "挂钩"; };
     std::optional<std::string> on_initialize() override;
     void on_draw_ui() override;
 

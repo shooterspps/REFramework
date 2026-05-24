@@ -370,13 +370,13 @@ void ObjectExplorer::on_draw_dev_ui() {
     if (!m_do_init && !ImGui::CollapsingHeader(get_name().data())) {
         return;
     }
-    if (ImGui::Button("Dump SDK")) {
+    if (ImGui::Button("转储 SDK")) {
         std::thread t(&ObjectExplorer::generate_sdk, this, false);
         t.detach();
     }
     
     ImGui::SameLine();
-    if (ImGui::Button("Dump il2cpp json Only")) {
+    if (ImGui::Button("仅转存 il2cpp json")) {
         std::thread t(&ObjectExplorer::generate_sdk, this, true);
         t.detach();
     }
@@ -390,35 +390,35 @@ void ObjectExplorer::on_draw_dev_ui() {
             progress = 0.0f;
             break;
         case SdkDumpStage::DUMP_INITIALIZATION:
-            overlay = "Initializing Dump...";
+            overlay = "初始化转储...";
             progress = static_cast<float>(ImGui::GetTime()) * -0.35f;
             break;
         case SdkDumpStage::DUMP_TYPES: 
-            overlay = "Dumping Types...";
+            overlay = "转储类型...";
             break;
         case SdkDumpStage::DUMP_RSZ:
-            overlay = "Dumping RSZ...";
+            overlay = "转储 RSZ...";
             break;
         case SdkDumpStage::DUMP_METHODS:
-            overlay = "Dumping Methods...";
+            overlay = "转储方法...";
             break;
         case SdkDumpStage::DUMP_FIELDS:
-            overlay = "Dumping Fields...";
+            overlay = "转储字段...";
             break;
         case SdkDumpStage::DUMP_PROPERTIES:
-            overlay = "Dumping Properties...";
+            overlay = "转储属性...";
             break;
         case SdkDumpStage::DUMP_RSZ_2:
-            overlay = "Adjusting RSZ...";
+            overlay = "调试 RSZ...";
             break;
         case SdkDumpStage::DUMP_DESERIALIZER_CHAIN:
-            overlay = "Dumping Deserializer Chains...";
+            overlay = "转储反序列化链...";
             break;
         case SdkDumpStage::DUMP_NON_TDB_TYPES:
-            overlay = "Dumping Non-TDB Types...";
+            overlay = "转储非数据库类型...";
             break;
         case SdkDumpStage::GENERATE_SDK:
-            overlay = "Generating IDA SDK...";
+            overlay = "创建 IDA SDK...";
             progress = static_cast<float>(ImGui::GetTime()) * -0.35f;
             break;
         default: 
@@ -432,7 +432,7 @@ void ObjectExplorer::on_draw_dev_ui() {
     auto curtime = std::chrono::system_clock::now();
 
     // List of globals to choose from
-    if (ImGui::CollapsingHeader("Singletons")) {
+    if (ImGui::CollapsingHeader("单体")) {
         if (curtime > m_next_refresh) {
             reframework::get_globals()->safe_refresh();
             m_next_refresh = curtime + std::chrono::seconds(1);
@@ -479,7 +479,7 @@ void ObjectExplorer::on_draw_dev_ui() {
         }
     }
 
-    if (ImGui::CollapsingHeader("Native Singletons")) {
+    if (ImGui::CollapsingHeader("本地单体")) {
         auto& native_singletons = reframework::get_globals()->get_native_singleton_types();
 
         // Display the nodes
@@ -497,7 +497,7 @@ void ObjectExplorer::on_draw_dev_ui() {
         }
     }
 
-    if (ImGui::CollapsingHeader("Renderer")) {
+    if (ImGui::CollapsingHeader("渲染器")) {
         auto root_layer = sdk::renderer::get_root_layer();
         ImGui::Text("Root layer: 0x%p", root_layer);
 
@@ -520,7 +520,7 @@ void ObjectExplorer::on_draw_dev_ui() {
         }
     }
 
-    if (ImGui::CollapsingHeader("Types")) {
+    if (ImGui::CollapsingHeader("类型")) {
         std::vector<uint8_t> fake_type{ 0 };
 
         for (const auto& name : m_sorted_types) {
@@ -539,7 +539,7 @@ void ObjectExplorer::on_draw_dev_ui() {
         }
     }
 
-    if (ImGui::CollapsingHeader("Assemblies")) {
+    if (ImGui::CollapsingHeader("程序集")) {
         auto tdb = sdk::RETypeDB::get();
 
         for (auto i = 0; i < tdb->get_num_modules(); ++i) {
@@ -550,10 +550,10 @@ void ObjectExplorer::on_draw_dev_ui() {
             std::string_view location{ module.get_location() != nullptr ? module.get_location() : "Unknown" };
             
             if (ImGui::TreeNode(assembly_name.data())) {
-                ImGui::Text("Location: %s", location.data());
-                ImGui::Text("Module Name: %s", module_name.data());
+                ImGui::Text("位置: %s", location.data());
+                ImGui::Text("模块名称: %s", module_name.data());
                 
-                if (ImGui::TreeNode("Assembly Types")) {
+                if (ImGui::TreeNode("程序集类型")) {
                     std::vector<uint8_t> fake_type{ 0 };
 
                     for (auto& t_index : module.get_types()) {
@@ -573,7 +573,7 @@ void ObjectExplorer::on_draw_dev_ui() {
                     ImGui::TreePop();
                 }
 
-                if (ImGui::TreeNode("Assembly Methods")) {
+                if (ImGui::TreeNode("程序集方法")) {
                     for (auto& m_index : module.get_methods()) {
                         auto m = tdb->get_method(m_index);
                         if (m == nullptr) {
@@ -585,7 +585,7 @@ void ObjectExplorer::on_draw_dev_ui() {
                     ImGui::TreePop();
                 }
 
-                if (ImGui::TreeNode("Assembly Instantiated Methods")) {
+                if (ImGui::TreeNode("程序集实例化方法")) {
                     for (auto& m_index : module.get_instantiated_methods()) {
                         auto m = tdb->get_method(m_index);
                         if (m == nullptr) {
@@ -597,7 +597,7 @@ void ObjectExplorer::on_draw_dev_ui() {
                     ImGui::TreePop();
                 }
 
-                if (ImGui::TreeNode("Assembly Member References")) {
+                if (ImGui::TreeNode("程序集成员引用")) {
                     for (auto& m_index : module.get_member_references()) {
                         if (auto m = tdb->get_method(m_index); m != nullptr) {
                             attempt_display_method(nullptr, *m, true);
@@ -612,9 +612,9 @@ void ObjectExplorer::on_draw_dev_ui() {
         }
     }
 
-    ImGui::Checkbox("Search using Regex", &m_search_using_regex);
+    ImGui::Checkbox("使用 Regex 搜索", &m_search_using_regex);
 
-    if (m_do_init || ImGui::InputText("Type Name", m_type_name.data(), 256)) {
+    if (m_do_init || ImGui::InputText("类型名称", m_type_name.data(), 256)) {
         m_displayed_types.clear();
 
         if (auto t = get_type(m_type_name.data())) {
@@ -645,7 +645,7 @@ void ObjectExplorer::on_draw_dev_ui() {
         }
     }
 
-    if (m_do_init || ImGui::InputText("Method Signature", m_type_member.data(), 256)) {
+    if (m_do_init || ImGui::InputText("方法签名", m_type_member.data(), 256)) {
         m_displayed_types.clear();
         m_type_field[0] = '\0';
 
@@ -660,7 +660,7 @@ void ObjectExplorer::on_draw_dev_ui() {
         }
     }
 
-    if (m_do_init || ImGui::InputText("Field Signature", m_type_field.data(), 256)) {
+    if (m_do_init || ImGui::InputText("字段签名", m_type_field.data(), 256)) {
         m_displayed_types.clear();
         m_type_member[0] = '\0';
 
@@ -675,7 +675,7 @@ void ObjectExplorer::on_draw_dev_ui() {
         }
     }
 
-    if (ImGui::InputText("Method Address", m_method_address.data(), 17, ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsHexadecimal)) {
+    if (ImGui::InputText("方法地址", m_method_address.data(), 17, ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsHexadecimal)) {
         m_displayed_method = nullptr;
 
         try {
@@ -687,11 +687,11 @@ void ObjectExplorer::on_draw_dev_ui() {
                 }
             }
         } catch (...) {
-            ImGui::Text("Invalid address");
+            ImGui::Text("无效地址");
         }
     }
 
-    if (ImGui::InputText("TDB Method Address", m_method_tdb_address.data(), 17, ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsHexadecimal)) {
+    if (ImGui::InputText("TDB方法地址", m_method_tdb_address.data(), 17, ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsHexadecimal)) {
         m_displayed_method = nullptr;
 
         try {
@@ -708,20 +708,20 @@ void ObjectExplorer::on_draw_dev_ui() {
                     if (((method_address - base) % stride) == 0) {
                         m_displayed_method = (sdk::REMethodDefinition*)method_address;
                     } else {
-                        ImGui::Text("Invalid address");
+                        ImGui::Text("无效地址");
                     }
                 } else {
-                    ImGui::Text("Invalid address");
+                    ImGui::Text("无效地址");
                 }
             }
         } catch (...) {
-            ImGui::Text("Invalid address");
+            ImGui::Text("无效地址");
         }
     }
 
-    ImGui::InputText("REObject Address", m_object_address.data(), 17, ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsHexadecimal);
+    ImGui::InputText("RE物件地址", m_object_address.data(), 17, ImGuiInputTextFlags_::ImGuiInputTextFlags_CharsHexadecimal);
 
-    if (ImGui::Button("Create new game object"))  {
+    if (ImGui::Button("创建游戏物件"))  {
         auto& pinned = m_pinned_objects.emplace_back();
         const auto gameobject_t = sdk::find_type_definition("via.GameObject");
         const auto create_method = gameobject_t->get_method("create(System.String)");
@@ -987,8 +987,8 @@ void ObjectExplorer::display_hooks() {
         method_context_menu(h.method, h.name);
 
         if (made_node) {
-            ImGui::Checkbox("Skip function call", &h.skip);
-            ImGui::TextWrapped("Call count: %i", h.stats.call_count);
+            ImGui::Checkbox("跳过函数调用", &h.skip);
+            ImGui::TextWrapped("调用次数: %i", h.stats.call_count);
 
             ImGui::SameLine();
             const float delta_ms = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(h.stats.last_call_delta).count();
@@ -2511,7 +2511,7 @@ void ObjectExplorer::generate_sdk(const bool skip_sdkgenny) {
     sdk.include("cstdint");
     sdk.generate("sdk");*/
 
-    spdlog::info("Generating IDA SDK...");
+    spdlog::info("创建 IDA SDK...");
     m_sdk_dump_stage = SdkDumpStage::GENERATE_SDK;
 
     if (!skip_sdkgenny) {
@@ -2760,7 +2760,7 @@ void ObjectExplorer::handle_address(Address address, int32_t offset, Address par
 void ObjectExplorer::handle_game_object(REGameObject* game_object) {
     ImGui::PushID((void*)game_object);
 
-    if (ImGui::InputText("Add Component", m_add_component_name.data(), 256, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue)) {
+    if (ImGui::InputText("添加组件", m_add_component_name.data(), 256, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue)) {
         const auto tdef = sdk::find_type_definition(m_add_component_name.data());
 
         if (tdef != nullptr) {
@@ -2795,7 +2795,7 @@ void ObjectExplorer::handle_game_object(REGameObject* game_object) {
 
     auto game_object_name = game_object->get_name();
 
-    ImGui::Text("Name: %s", game_object_name.c_str());
+    ImGui::Text("名称: %s", game_object_name.c_str());
     make_tree_offset(game_object, REGameObject::offset_of_transform(), "Transform");
     make_tree_offset(game_object, REGameObject::offset_of_folder(), "Folder");
 
@@ -2822,7 +2822,7 @@ void ObjectExplorer::handle_component(REComponent* component) {
         }
     };
 
-    if (ImGui::Button("Destroy Component")) {
+    if (ImGui::Button("毁坏组件")) {
         sdk::call_object_func<void*>(component, "destroy", sdk::get_thread_context(), component);
     }
 
@@ -2951,8 +2951,8 @@ void ObjectExplorer::handle_behavior_tree_node(sdk::behaviortree::BehaviorTree* 
 
     if (made_node) {
         ImGui::Text("ID: %u", node->get_id());
-        ImGui::Text("Status1: %i", (int32_t)node->get_status1());
-        ImGui::Text("Status2: %i", (int32_t)node->get_status2());
+        ImGui::Text("状态1: %i", (int32_t)node->get_status1());
+        ImGui::Text("状态2: %i", (int32_t)node->get_status2());
 
         if (ImGui::TreeNode("Children")) {
             for (auto child : node->get_children()) {
@@ -3043,7 +3043,7 @@ void ObjectExplorer::handle_type(REManagedObject* obj, REType* t) {
 
                     if (generic_td != nullptr) {
                         if (stretched_tree_node("Generic Type Definition")) {
-                            ImGui::Text("Name: %s", generic_td->get_full_name().c_str()); // just in-case the get_type() returns nullptr.
+                            ImGui::Text("名称: %s", generic_td->get_full_name().c_str()); // just in-case the get_type() returns nullptr.
                             display_native_methods(nullptr, generic_td);
                             display_native_fields(nullptr, generic_td);
                             ImGui::TreePop();
@@ -3160,10 +3160,10 @@ void ObjectExplorer::display_reflection_methods(REManagedObject* obj, REType* ty
             }
 
             if (made_node) {
-                ImGui::Text("Address: 0x%p", descriptor);
-                ImGui::Text("Function: 0x%p", descriptor->get_functionPtr());
+                ImGui::Text("地址: 0x%p", descriptor);
+                ImGui::Text("功能: 0x%p", descriptor->get_functionPtr());
 
-                if (descriptor->get_functionPtr() != nullptr && ImGui::Button("Attempt to call")) {
+                if (descriptor->get_functionPtr() != nullptr && ImGui::Button("尝试调用")) {
                     char poop[0x100]{ 0 };
                     obj->call_method(descriptor->get_name(), poop);
                 }
@@ -3171,7 +3171,7 @@ void ObjectExplorer::display_reflection_methods(REManagedObject* obj, REType* ty
                 auto t2 = get_type(ret);
 
                 if (t2 == nullptr || t2 == type_info) {
-                    ImGui::Text("Type: %s", ret.c_str());
+                    ImGui::Text("类型: %s", ret.c_str());
                 }
                 else {
                     std::vector<uint8_t> fake_object(get_size(t2), 0);
@@ -3256,15 +3256,15 @@ void ObjectExplorer::display_reflection_properties(REManagedObject* obj, REType*
                 }
 
                 if (ImGui::TreeNode(variable, "Additional Information")) {
-                    ImGui::Text("Address: 0x%p", variable);
-                    ImGui::Text("Function: 0x%p", variable->get_function());
+                    ImGui::Text("地址: 0x%p", variable);
+                    ImGui::Text("功能: 0x%p", variable->get_function());
 
                     // Display type information
                     if (variable->get_typeName() != nullptr) {
                         auto t2 = get_type(variable->get_typeName());
 
                         if (t2 == nullptr || t2 == type_info) {
-                            ImGui::Text("Type: %s", variable->get_typeName());
+                            ImGui::Text("类型: %s", variable->get_typeName());
                         }
                         else {
                             std::vector<uint8_t> fake_object(get_size(t2), 0);
@@ -3275,16 +3275,16 @@ void ObjectExplorer::display_reflection_properties(REManagedObject* obj, REType*
 
                     auto prop_flags = utility::reflection_property::get_flags(variable);
 
-                    ImGui::Text("TypeKind: %i (%s)", prop_flags.type_kind, get_enum_value_name("via.reflection.TypeKind", (int64_t)prop_flags.type_kind).c_str());
-                    ImGui::Text("Qualifiers: %i", prop_flags.type_qual);
-                    ImGui::Text("Attributes: %i", prop_flags.type_attr);
+                    ImGui::Text("类别: %i (%s)", prop_flags.type_kind, get_enum_value_name("via.reflection.TypeKind", (int64_t)prop_flags.type_kind).c_str());
+                    ImGui::Text("候选: %i", prop_flags.type_qual);
+                    ImGui::Text("特性: %i", prop_flags.type_attr);
                     
-                    ImGui::Text("Size: %i", utility::reflection_property::get_size(variable));
-                    ImGui::Text("ManagedStr: %i", prop_flags.managed_str);
-                    ImGui::Text("VarType: %i", variable->get_variableType());
+                    ImGui::Text("大小: %i", utility::reflection_property::get_size(variable));
+                    ImGui::Text("管理Str: %i", prop_flags.managed_str);
+                    ImGui::Text("变量类型: %i", variable->get_variableType());
 
                     if (variable->get_staticVariableData() != nullptr) {
-                        ImGui::Text("GlobalIndex: %i", variable->get_staticVariableData()->variableIndex);
+                        ImGui::Text("全局索引: %i", variable->get_staticVariableData()->variableIndex);
                     }
 
                     ImGui::TreePop();
@@ -3567,16 +3567,16 @@ void ObjectExplorer::attempt_display_method(REManagedObject* obj, sdk::REMethodD
     if (made_node) {
         if (ImGui::BeginTable("##method", 4,  ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable)) {
             ImGui::TableNextColumn();
-            ImGui::Text("Address");
+            ImGui::Text("地址");
 
             ImGui::TableNextColumn();
-            ImGui::Text("Virtual Index");
+            ImGui::Text("虚拟索引");
 
             ImGui::TableNextColumn();
-            ImGui::Text("Flags");
+            ImGui::Text("标志");
 
             ImGui::TableNextColumn();
-            ImGui::Text("Impl flags");
+            ImGui::Text("导入标志");
             
             // address
             ImGui::TableNextColumn();
@@ -3600,11 +3600,11 @@ void ObjectExplorer::attempt_display_method(REManagedObject* obj, sdk::REMethodD
         if (method_param_types.size() > 0) {
             if (ImGui::BeginTable("##params", 3,  ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable)) {
                 ImGui::TableNextColumn();
-                ImGui::Text("Index");
+                ImGui::Text("索引");
                 ImGui::TableNextColumn();
-                ImGui::Text("Type");
+                ImGui::Text("类型");
                 ImGui::TableNextColumn();
-                ImGui::Text("Name");
+                ImGui::Text("名称");
 
                 for (auto i = 0; i < method_param_types.size(); i++) {
                     ImGui::TableNextColumn();
@@ -3648,13 +3648,13 @@ void ObjectExplorer::attempt_display_method(REManagedObject* obj, sdk::REMethodD
 
         if (ImGui::BeginTable("##disassembly", 3,  ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable)) {
             ImGui::TableNextColumn();
-            ImGui::Text("Address");
+            ImGui::Text("地址");
 
             ImGui::TableNextColumn();
-            ImGui::Text("Bytes");
+            ImGui::Text("字节");
 
             ImGui::TableNextColumn();
-            ImGui::Text("Instruction");
+            ImGui::Text("说明");
 
             // Show a short disassembly of the method
             auto ip = (uintptr_t)method_ptr;
@@ -3861,7 +3861,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& int_val = *(uint64_t*)real_data;
 
-            ImGui::DragScalar("Set Value", ImGuiDataType_U64, &int_val, 1.0f, &min_uint64, &max_uint64);
+            ImGui::DragScalar("设定值", ImGuiDataType_U64, &int_val, 1.0f, &min_uint64, &max_uint64);
         }
 
         break;
@@ -3872,7 +3872,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& int_val = *(int64_t*)real_data;
 
-            ImGui::DragScalar("Set Value", ImGuiDataType_S64, &int_val, 1.0f, &min_int64, &max_int64);
+            ImGui::DragScalar("设定值", ImGuiDataType_S64, &int_val, 1.0f, &min_int64, &max_int64);
         }
 
         break;
@@ -3883,7 +3883,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& int_val = *(uint32_t*)real_data;
 
-            ImGui::DragScalar("Set Value", ImGuiDataType_U32, &int_val, 1.0f, &min_uint, &max_uint);
+            ImGui::DragScalar("设定值", ImGuiDataType_U32, &int_val, 1.0f, &min_uint, &max_uint);
         }
 
         break;
@@ -3894,7 +3894,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& int_val = *(int32_t*)real_data;
 
-            ImGui::DragInt("Set Value", (int*)&int_val, 1.0f, min_int, max_int);
+            ImGui::DragInt("设定值", (int*)&int_val, 1.0f, min_int, max_int);
         }
 
         break;
@@ -3906,7 +3906,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& int_val = *(uint16_t*)real_data;
 
-            ImGui::DragScalar("Set Value", ImGuiDataType_U16, &int_val, 1.0f, &min_u16, &max_u16);
+            ImGui::DragScalar("设定值", ImGuiDataType_U16, &int_val, 1.0f, &min_u16, &max_u16);
         }
         break;
 
@@ -3917,7 +3917,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& int_val = *(int16_t*)real_data;
 
-            ImGui::DragScalar("Set Value", ImGuiDataType_S16, &int_val, 1.0f, &min_i16, &max_i16);
+            ImGui::DragScalar("设定值", ImGuiDataType_S16, &int_val, 1.0f, &min_i16, &max_i16);
         }
         break;
     case "System.Byte"_fnv:
@@ -3927,7 +3927,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& int_val = *(uint8_t*)real_data;
 
-            ImGui::DragScalar("Set Value", ImGuiDataType_U8, &int_val, 1.0f, &min_u8, &max_u8);
+            ImGui::DragScalar("设定值", ImGuiDataType_U8, &int_val, 1.0f, &min_u8, &max_u8);
         }
 
         break;
@@ -3938,7 +3938,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& int_val = *(int8_t*)real_data;
 
-            ImGui::DragScalar("Set Value", ImGuiDataType_S8, &int_val, 1.0f, &min_i8, &max_i8);
+            ImGui::DragScalar("设定值", ImGuiDataType_S8, &int_val, 1.0f, &min_i8, &max_i8);
         }
 
         break;
@@ -3951,7 +3951,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& float_val = *(float*)real_data;
 
-            ImGui::DragFloat("Set Value", &float_val, 0.01f, min_float, max_float);
+            ImGui::DragFloat("设定值", &float_val, 0.01f, min_float, max_float);
         }
 
         break;
@@ -3968,7 +3968,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& bool_val = *(bool*)real_data;
 
-            ImGui::Checkbox("Set Value", &bool_val);
+            ImGui::Checkbox("设定值", &bool_val);
         }
 
         break;
@@ -3991,7 +3991,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& vec_val = *(Vector2f*)real_data;
 
-            ImGui::DragFloat2("Set Value", (float*)&vec_val, 0.01f, min_float, max_float);
+            ImGui::DragFloat2("设定值", (float*)&vec_val, 0.01f, min_float, max_float);
         }
 
         break;
@@ -4008,7 +4008,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& vec_val = *(Vector3f*)real_data;
 
-            ImGui::DragFloat3("Set Value", (float*)&vec_val, 0.01f, min_float, max_float);
+            ImGui::DragFloat3("设定值", (float*)&vec_val, 0.01f, min_float, max_float);
         }
 
         break;
@@ -4022,7 +4022,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
         if (real_data != nullptr) {
             auto& vec_val = *(Vector4f*)real_data;
 
-            ImGui::DragFloat4("Set Value", (float*)&vec_val, 0.01f, min_float, max_float);
+            ImGui::DragFloat4("设定值", (float*)&vec_val, 0.01f, min_float, max_float);
         }
 
         break;
@@ -4037,7 +4037,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
                 auto& mat_val = *(glm::mat4*)real_data;
 
                 ImGui::PushID(&mat_val[i]);
-                ImGui::DragFloat4("Set Value", (float*)&mat_val[i], 0.01f, min_float, max_float);
+                ImGui::DragFloat4("设定值", (float*)&mat_val[i], 0.01f, min_float, max_float);
                 ImGui::PopID();
             }
         }
@@ -4067,7 +4067,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
                             if (real_data != nullptr) {
                                 auto& int_val = *(int8_t*)real_data;
 
-                                ImGui::DragScalar("Set Value", ImGuiDataType_S8, &int_val, 1.0f, &min_i8, &max_i8);
+                                ImGui::DragScalar("设定值", ImGuiDataType_S8, &int_val, 1.0f, &min_i8, &max_i8);
                             }
                             break;
                         case 2:
@@ -4075,7 +4075,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
                             if (real_data != nullptr) {
                                 auto& int_val = *(int16_t*)real_data;
 
-                                ImGui::DragScalar("Set Value", ImGuiDataType_S16, &int_val, 1.0f, &min_i16, &max_i16);
+                                ImGui::DragScalar("设定值", ImGuiDataType_S16, &int_val, 1.0f, &min_i16, &max_i16);
                             }
                             break;
                         case 4:
@@ -4083,7 +4083,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
                             if (real_data != nullptr) {
                                 auto& int_val = *(int32_t*)real_data;
 
-                                ImGui::DragInt("Set Value", (int*)&int_val, 1.0f, min_int, max_int);
+                                ImGui::DragInt("设定值", (int*)&int_val, 1.0f, min_int, max_int);
                             }
                             break;
                         case 8:
@@ -4091,7 +4091,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
                             if (real_data != nullptr) {
                                 auto& int_val = *(int64_t*)real_data;
 
-                                ImGui::DragScalar("Set Value", ImGuiDataType_S64, &int_val, 1.0f, &min_int64, &max_int64);
+                                ImGui::DragScalar("设定值", ImGuiDataType_S64, &int_val, 1.0f, &min_int64, &max_int64);
                             }
                             break;
                         default:
@@ -4101,7 +4101,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
                             if (real_data != nullptr) {
                                 auto& int_val = *(int32_t*)real_data;
 
-                                ImGui::DragInt("Set Value", (int*)&int_val, 1.0f, min_int, max_int);
+                                ImGui::DragInt("设定值", (int*)&int_val, 1.0f, min_int, max_int);
                             }
                             break;
                     }
@@ -4112,7 +4112,7 @@ void ObjectExplorer::display_data(void* data, void* real_data, std::string type_
                     if (real_data != nullptr) {
                         auto& int_val = *(int32_t*)real_data;
 
-                        ImGui::DragInt("Set Value", (int*)&int_val, 1.0f, min_int, max_int);
+                        ImGui::DragInt("设定值", (int*)&int_val, 1.0f, min_int, max_int);
                     }
                 }
             } 

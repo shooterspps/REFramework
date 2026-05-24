@@ -12,7 +12,7 @@ public:
     static std::shared_ptr<APIProxy>& get();
 
 public:
-    std::string_view get_name() const override { return "APIProxy"; }
+    std::string_view get_name() const override { return "API 代理"; }
 
     void on_present() override;
     void on_frame() override;

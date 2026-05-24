@@ -14,18 +14,18 @@ LooseFileLoader::LooseFileLoader()
 {
     g_loose_file_loader = this;
 
-    m_logger = spdlog::basic_logger_mt("LooseFileLoader", REFramework::get_persistent_dir("reframework_accessed_files.txt").string(), true);
+    m_logger = spdlog::basic_logger_mt("非打包文件加载器", REFramework::get_persistent_dir("reframework_accessed_files.txt").string(), true);
     m_loose_file_logger = spdlog::basic_logger_mt("LooseFileLoader2", REFramework::get_persistent_dir("reframework_loose_files.txt").string(), true);
 
     m_logger->set_level(spdlog::level::info);
     m_logger->flush_on(spdlog::level::info);
 
-    m_logger->info("LooseFileLoader constructed");
+    m_logger->info("已构建 LooseFileLoader");
 
     m_loose_file_logger->set_level(spdlog::level::info);
     m_loose_file_logger->flush_on(spdlog::level::info);
 
-    m_loose_file_logger->info("LooseFileLoader constructed");
+    m_loose_file_logger->info("已构建 LooseFileLoader");
 }
 
 std::shared_ptr<LooseFileLoader>& LooseFileLoader::get() {
@@ -69,7 +69,7 @@ void LooseFileLoader::on_draw_ui() {
     }
 
     if (m_attempted_hook && !m_hook_success) {
-        ImGui::TextWrapped("Failed to hook successfully. This mod will not work.");
+        ImGui::TextWrapped("挂钩失败. 此 MOD 将无法运行.");
         return;
     }
 
@@ -81,16 +81,16 @@ void LooseFileLoader::on_draw_ui() {
         m_uncached_hits = 0;
     };
 
-    if (m_enabled->draw("Enable Loose File Loader")) {
+    if (m_enabled->draw("启用非打包文件加载器")) {
         clear_existence_cache();
         g_framework->request_save_config();
     }
 
     if (m_hook_success) {
-        ImGui::TextWrapped("Files encountered: %d", m_files_encountered);
-        ImGui::TextWrapped("Loose files loaded: %d", m_loose_files_loaded);
+        ImGui::TextWrapped("找到的文件: %d", m_files_encountered);
+        ImGui::TextWrapped("非打包文件加载器: %d", m_loose_files_loaded);
 
-        if (ImGui::Button("Clear stats")) {
+        if (ImGui::Button("清除统计数据")) {
             m_files_encountered = 0;
             m_loose_files_loaded = 0;
 
@@ -101,38 +101,38 @@ void LooseFileLoader::on_draw_ui() {
             m_all_loose_files.clear();
         }
 
-        if (ImGui::TreeNode("Debug")) {
-            ImGui::Checkbox("Enable file cache", &m_enable_file_cache);
-            ImGui::TextWrapped("Cache hits: %d", m_cache_hits);
-            ImGui::TextWrapped("Uncached hits: %d", m_uncached_hits);
+        if (ImGui::TreeNode("调试")) {
+            ImGui::Checkbox("启用文件缓存缓存点击率", &m_enable_file_cache);
+            ImGui::TextWrapped("缓存点击率: %d", m_cache_hits);
+            ImGui::TextWrapped("未缓存点击率: %d", m_uncached_hits);
 
-            if (ImGui::Button("Clear existence cache")) {
+            if (ImGui::Button("清除存在缓存")) {
                 clear_existence_cache();
             }
 
             ImGui::TreePop();
         }
 
-        m_log_accessed_files->draw("Log accessed files");
+        m_log_accessed_files->draw("访问日志文件");
         if (ImGui::IsItemHovered()) {
             ImGui::BeginTooltip();
-            ImGui::Text("Logs all accessed files to <game_dir>/reframework_accessed_files.txt");
+            ImGui::Text("将所有访问过的文件记录到 <game_dir>/reframework_accessed_files.txt");
             ImGui::EndTooltip();
         }
 
-        m_log_loose_files->draw("Log loose files");
+        m_log_loose_files->draw("非打包日志文件");
         if (ImGui::IsItemHovered()) {
             ImGui::BeginTooltip();
-            ImGui::Text("Logs loaded loose files to <game_dir>/reframework_loose_files.txt");
+            ImGui::Text("将已加载的非打包文件记录到 <game_dir>/reframework_loose_files.txt");
             ImGui::EndTooltip();
         }
 
-        ImGui::Checkbox("Show recent files", &m_show_recent_files);
+        ImGui::Checkbox("显示最近文件", &m_show_recent_files);
 
         if (m_show_recent_files) {
             std::shared_lock _{m_mutex};
 
-            if (ImGui::TreeNode("Recent accessed files")) {
+            if (ImGui::TreeNode("最近访问的文件")) {
                 for (const auto& file : m_recent_accessed_files) {
                     ImGui::TextWrapped("%s", utility::narrow(file).c_str());
                 }
@@ -140,7 +140,7 @@ void LooseFileLoader::on_draw_ui() {
                 ImGui::TreePop();
             }
 
-            if (ImGui::TreeNode("Recent loose files")) {
+            if (ImGui::TreeNode("最近的非打包文件")) {
                 for (const auto& file : m_recent_loose_files) {
                     ImGui::TextWrapped("%s", utility::narrow(file).c_str());
                 }

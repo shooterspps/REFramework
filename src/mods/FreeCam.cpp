@@ -43,31 +43,31 @@ void FreeCam::on_draw_ui() {
         return;
     }
 
-    if (m_enabled->draw("Enabled")) {
+    if (m_enabled->draw("启用")) {
         m_first_time = true;
     }
 
     ImGui::SameLine();
-    m_lock_camera->draw("Lock Position");
+    m_lock_camera->draw("锁定位置");
 
     if (sdk::GameIdentity::get().is_re2() || sdk::GameIdentity::get().is_re3() || sdk::GameIdentity::get().is_re8() || sdk::GameIdentity::get().is_re4()) {
-        m_disable_movement->draw("Disable Character Movement");
+        m_disable_movement->draw("禁用角色移动");
     }
 
-    m_toggle_key->draw("Toggle Key");
-    m_move_up_key->draw("Move camera up Key");
-    m_move_down_key->draw("Move camera down Key");
-    m_lock_camera_key->draw("Lock Position Toggle Key");
+    m_toggle_key->draw("切换按键");
+    m_move_up_key->draw("向上移动摄像机按键");
+    m_move_down_key->draw("向下移动摄像机按键");
+    m_lock_camera_key->draw("锁定位置切换按键");
     if (sdk::GameIdentity::get().is_re2() || sdk::GameIdentity::get().is_re3() || sdk::GameIdentity::get().is_re8() || sdk::GameIdentity::get().is_re4()) {
-        m_disable_movement_key->draw("Disable Movement Toggle Key");
+        m_disable_movement_key->draw("禁用移动切换按键");
     }
-    m_speed_modifier_fast_key->draw("Speed modifier Fast key");
-    m_speed_modifier_slow_key->draw("Speed modifier Slow key");
+    m_speed_modifier_fast_key->draw("快速调节速度按键");
+    m_speed_modifier_slow_key->draw("慢速调节速度按键");
 
-    m_rotation_speed->draw("Rotation Speed");
+    m_rotation_speed->draw("旋转速度");
 
-    m_speed->draw("Speed");
-    m_speed_modifier->draw("Speed Modifier");
+    m_speed->draw("速度");
+    m_speed_modifier->draw("速度调节");
 }
 
 enum class MoveDirection : uint8_t {

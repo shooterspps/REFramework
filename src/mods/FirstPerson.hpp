@@ -25,7 +25,7 @@ public:
 
     void toggle();
 
-    std::string_view get_name() const override { return "FirstPerson"; };
+    std::string_view get_name() const override { return "第一人称"; };
     std::optional<std::string> on_initialize() override;
 
     void on_frame() override;
@@ -172,13 +172,13 @@ private:
     const ModToggle::Ptr m_disable_light_source{ ModToggle::create(generate_name("DisableLightSource"), true) };
     const ModToggle::Ptr m_show_in_cutscenes{ ModToggle::create(generate_name("ShowInCutscenes"), false) };
     const ModToggle::Ptr m_rotate_body{ ModToggle::create(generate_name("RotateBody"), true) };
-    const ModSlider::Ptr m_body_rotate_speed{ ModSlider::create(generate_name("BodyRotateSpeed"), 0.01f, 5.0f, 0.3f) };
+    const ModSlider::Ptr m_body_rotate_speed{ ModSlider::create(generate_name("身体旋转速度"), 0.01f, 5.0f, 0.3f) };
 
-    const ModSlider::Ptr m_fov_offset{ ModSlider::create(generate_name("FOVOffset"), -100.0f, 100.0f, 10.0f) };
-    const ModSlider::Ptr m_fov_mult{ ModSlider::create(generate_name("FOVMultiplier"), 0.0f, 2.0f, 1.0f) };
+    const ModSlider::Ptr m_fov_offset{ ModSlider::create(generate_name("FOV 视野偏移"), -100.0f, 100.0f, 10.0f) };
+    const ModSlider::Ptr m_fov_mult{ ModSlider::create(generate_name("FOV 倍数"), 0.0f, 2.0f, 1.0f) };
 
-    const ModSlider::Ptr m_camera_scale{ ModSlider::create(generate_name("CameraSpeed"), 0.0f, 100.0f, 40.0f) };
-    const ModSlider::Ptr m_bone_scale{ ModSlider::create(generate_name("CameraShake"), 0.0f, 100.0f, 15.0f) };
+    const ModSlider::Ptr m_camera_scale{ ModSlider::create(generate_name("摄像机速度"), 0.0f, 100.0f, 40.0f) };
+    const ModSlider::Ptr m_bone_scale{ ModSlider::create(generate_name("摄影机抖动"), 0.0f, 100.0f, 15.0f) };
 
     // just used to draw. not actually stored in config
     const ModFloat::Ptr m_current_fov{ ModFloat::create("") };

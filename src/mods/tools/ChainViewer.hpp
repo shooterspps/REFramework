@@ -16,7 +16,7 @@
 class ChainViewer : public Tool {
 public:
     std::string_view get_name() const override {
-        return "ChainViewer";
+        return "链式浏览器";
     }
     
     std::optional<std::string> on_initialize() override;
