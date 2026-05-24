@@ -91,7 +91,7 @@ jobs:
   nightly-push:
     runs-on: windows-latest
     needs: [dev-release, csharp-release]
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master-zh'
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -112,8 +112,8 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5
         with:
-          repo: REFramework-nightly
-          owner: praydog
+          repo: REFramework-nightly-zh
+          owner: shooterspps
           token: ${{ secrets.REPO_TOKEN }}
           name: ${{format('REF Nightly {0} ({1})', env.RUN_NUMBER, github.sha)}}
           tag: ${{format('nightly-{0}-{1}', env.RUN_NUMBER, github.sha)}}
