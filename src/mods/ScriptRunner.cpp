@@ -1101,7 +1101,7 @@ void ScriptRunner::on_draw_ui() {
             g_framework->open_console();
         }
 
-        if (m_open_debug_console_at_startup->draw("Open Debug Console at Startup")) {
+        if (m_open_debug_console_at_startup->draw("启动时打开调试控制台")) {
             g_framework->request_save_config();
         }
 
