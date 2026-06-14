@@ -278,10 +278,10 @@ void Graphics::on_draw_ui() {
         }
 
         if (m_ultrawide_fix->value()) {
-            m_ultrawide_16_10_mode->draw("16:10 Mode: Use Black Bars (maintain 16:9)");
+            m_ultrawide_16_10_mode->draw("16:10模式：使用黑边（保持16:9）");
             if (ImGui::IsItemHovered()) {
-                ImGui::SetTooltip("On a 16:10 display, keeps the game at 16:9 with black bars instead of\n"
-                                  "stretching to fill the screen. Prevents UI element misalignment.");
+                ImGui::SetTooltip("在16:10显示器上，使游戏保持16:9并带有黑边，而不是\n"
+                                  "拉伸填满屏幕。防止UI元素错位。");
             }
 
             if (!sdk::GameIdentity::get().is_mhwilds()) {
